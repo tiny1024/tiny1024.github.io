@@ -4,26 +4,29 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>Hello World | Cherish What You Have at the Moment</title>
+    <title>Apache + Php Config On Yosemite | Cherish What You Have at the Moment</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="tiny1024">
     
 
     
-    <meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.
-Quick">
+    <meta name="description" content="启用 php1$ sudo vi /etc/apache2/httpd.conf
+取消下面一行的注释：1/LoadModule php5_module libexec/apache2/libphp5.so
+启用每个用户的支持启用之后就可以使用http://localhost/~username/来访问每个用户自己的网站123456789$ sudo mkdir ~/Sites/$ sudo vi">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello World">
-<meta property="og:url" content="http://www.tiny1024.com/2015/07/07/hello-world/index.html">
+<meta property="og:title" content="Apache + Php Config On Yosemite">
+<meta property="og:url" content="http://www.tiny1024.com/2015/07/09/Apache-Php-Config-On-Yosemite/index.html">
 <meta property="og:site_name" content="Cherish What You Have at the Moment">
-<meta property="og:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.
-Quick">
-<meta property="og:updated_time" content="2015-07-07T04:39:40.000Z">
+<meta property="og:description" content="启用 php1$ sudo vi /etc/apache2/httpd.conf
+取消下面一行的注释：1/LoadModule php5_module libexec/apache2/libphp5.so
+启用每个用户的支持启用之后就可以使用http://localhost/~username/来访问每个用户自己的网站123456789$ sudo mkdir ~/Sites/$ sudo vi">
+<meta property="og:updated_time" content="2015-07-09T06:24:24.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hello World">
-<meta name="twitter:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.
-Quick">
+<meta name="twitter:title" content="Apache + Php Config On Yosemite">
+<meta name="twitter:description" content="启用 php1$ sudo vi /etc/apache2/httpd.conf
+取消下面一行的注释：1/LoadModule php5_module libexec/apache2/libphp5.so
+启用每个用户的支持启用之后就可以使用http://localhost/~username/来访问每个用户自己的网站123456789$ sudo mkdir ~/Sites/$ sudo vi">
 
     
     <link rel="alternative" href="/atom.xml" title="Cherish What You Have at the Moment" type="application/atom+xml">
@@ -83,14 +86,14 @@ Quick">
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/07/07/hello-world/" title="Hello World" itemprop="url">Hello World</a>
+      <a href="/2015/07/09/Apache-Php-Config-On-Yosemite/" title="Apache + Php Config On Yosemite" itemprop="url">Apache + Php Config On Yosemite</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="tiny1024" target="_blank" itemprop="author">tiny1024</a>
 		
   <p class="article-time">
-    <time datetime="2015-07-07T08:53:15.000Z" itemprop="datePublished"> 发表于 2015-07-07</time>
+    <time datetime="2015-07-09T06:04:20.000Z" itemprop="datePublished"> 发表于 2015-07-09</time>
     
   </p>
 </header>
@@ -99,24 +102,26 @@ Quick">
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Quick_Start"><span class="toc-number">1.</span> <span class="toc-text">Quick Start</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Create_a_new_post"><span class="toc-number">1.1.</span> <span class="toc-text">Create a new post</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Run_server"><span class="toc-number">1.2.</span> <span class="toc-text">Run server</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Generate_static_files"><span class="toc-number">1.3.</span> <span class="toc-text">Generate static files</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Deploy_to_remote_sites"><span class="toc-number">1.4.</span> <span class="toc-text">Deploy to remote sites</span></a></li></ol></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#启用_php"><span class="toc-number">1.</span> <span class="toc-text">启用 php</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#启用每个用户的支持"><span class="toc-number">2.</span> <span class="toc-text">启用每个用户的支持</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Restart_apache"><span class="toc-number">3.</span> <span class="toc-text">Restart apache</span></a></li></ol>
 		
 		</div>
 		
-		<p>Welcome to <a href="http://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="http://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="http://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick_Start">Quick Start</h2><h3 id="Create_a_new_post">Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run_server">Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate_static_files">Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy_to_remote_sites">Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
+		<h2 id="启用_php">启用 php</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo vi /etc/apache2/httpd.conf</span><br></pre></td></tr></table></figure>
+<p>取消下面一行的注释：<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="regexp">/LoadModule php5_module libexec/</span>apache2<span class="regexp">/libphp5.so</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="启用每个用户的支持">启用每个用户的支持</h2><p>启用之后就可以使用<a href="http://localhost/~username/来访问每个用户自己的网站" target="_blank" rel="external">http://localhost/~username/来访问每个用户自己的网站</a><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ sudo mkdir ~/Sites/</span><br><span class="line">$ sudo vi /etc/apache2/users/michael.conf</span><br><span class="line">&lt;pre&gt;</span><br><span class="line">&lt;Directory <span class="string">"/Users/michael/Sites/"</span>&gt;</span><br><span class="line">    Options Indexes MultiViews</span><br><span class="line">    AllowOverride None</span><br><span class="line">    Require all granted</span><br><span class="line">&lt;/Directory&gt;</span><br><span class="line">&lt;/pre&gt;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ sudo chmod <span class="number">775</span> /etc/apache2/users/michael.conf</span><br><span class="line">$ sudo vi /etc/apache2/httpd.conf</span><br><span class="line"></span><br><span class="line">&lt;pre&gt;</span><br><span class="line">LoadModule authz_core_module libexec/apache2/mod_authz_core.so</span><br><span class="line">LoadModule authz_host_module libexec/apache2/mod_authz_host.so</span><br><span class="line">LoadModule userdir_module libexec/apache2/mod_userdir.so</span><br><span class="line">Include /private/etc/apache2/extra/httpd-userdir.conf</span><br><span class="line">&lt;/pre&gt;</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ sudo vi /etc/apache2/extra/httpd-userdir.conf</span><br><span class="line"></span><br><span class="line">&lt;pre&gt;</span><br><span class="line">Include /private/etc/apache2/users/*.conf</span><br><span class="line">&lt;/pre&gt;</span><br></pre></td></tr></table></figure>
+<h2 id="Restart_apache">Restart apache</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apachectl restart</span><br></pre></td></tr></table></figure>
   
 	</div>
 		<footer class="article-footer clearfix">
 <div class="article-catetags">
 
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Apache/">Apache</a><a href="/tags/Mac/">Mac</a>
+  </div>
 
 </div>
 
@@ -124,7 +129,7 @@ Quick">
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://www.tiny1024.com/2015/07/07/hello-world/" data-title="Hello World | Cherish What You Have at the Moment" data-tsina="null" class="share clearfix">
+	  <div data-url="http://www.tiny1024.com/2015/07/09/Apache-Php-Config-On-Yosemite/" data-title="Apache + Php Config On Yosemite | Cherish What You Have at the Moment" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -137,14 +142,14 @@ Quick">
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2015/07/09/Apache-Php-Config-On-Yosemite/" title="Apache + Php Config On Yosemite">
-  <strong>上一篇：</strong><br/>
-  <span>
-  Apache + Php Config On Yosemite</span>
+
+<div class="next">
+<a href="/2015/07/07/hello-world/"  title="Hello World">
+ <strong>下一篇：</strong><br/> 
+ <span>Hello World
+</span>
 </a>
 </div>
-
 
 </nav>
 
@@ -156,7 +161,7 @@ Quick">
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Quick_Start"><span class="toc-number">1.</span> <span class="toc-text">Quick Start</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Create_a_new_post"><span class="toc-number">1.1.</span> <span class="toc-text">Create a new post</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Run_server"><span class="toc-number">1.2.</span> <span class="toc-text">Run server</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Generate_static_files"><span class="toc-number">1.3.</span> <span class="toc-text">Generate static files</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Deploy_to_remote_sites"><span class="toc-number">1.4.</span> <span class="toc-text">Deploy to remote sites</span></a></li></ol></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#启用_php"><span class="toc-number">1.</span> <span class="toc-text">启用 php</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#启用每个用户的支持"><span class="toc-number">2.</span> <span class="toc-text">启用每个用户的支持</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Restart_apache"><span class="toc-number">3.</span> <span class="toc-text">Restart apache</span></a></li></ol>
  
   </div>
 
