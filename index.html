@@ -78,17 +78,17 @@
   
 <section class="post" itemscope itemprop="blogitem">
   
-    <a href="/2015/07/09/Apache-Php-Config-On-Yosemite/" title="Apache + Php Config On Yosemite" itemprop="url">
+    <a href="/2015/07/10/objc-sort-array/" title="对NSArray中自定义对象进行排序" itemprop="url">
   
-    <h1 itemprop="name">Apache + Php Config On Yosemite</h1>
+    <h1 itemprop="name">对NSArray中自定义对象进行排序</h1>
     
      
-           <p itemprop="description" >启用 php1$ sudo vi /etc/apache2/httpd.conf
-取消下面一行的注释：1/LoadModule php5_module libexec/apache2/libphp5.so
-启用每个用户的支持启用之后就可以使用http://localhost/~u</p>
-        
+       <p itemprop="description" >使用NSComparator进行排序
+使用NSSortDescriptor进行排序
+使用selector进行排序</p>
+      
     
-    <time datetime="2015-07-09T06:04:20.000Z" itemprop="datePublished">2015-07-09</time>
+    <time datetime="2015-07-10T09:14:53.000Z" itemprop="datePublished">2015-07-10</time>
   </a>
 </section>
 
@@ -100,7 +100,94 @@
   
 <section class="post" itemscope itemprop="blogitem">
   
-    <a href="/2015/07/07/hello-world/" title="Hello World" itemprop="url">
+    <a href="/2015/07/10/c-static/" title="C语言中的static" itemprop="url">
+  
+    <h1 itemprop="name">C语言中的static</h1>
+    
+     
+           <p itemprop="description" >修饰变量变量又分为局部变量和全局变量，它们都存在内存的静态区。
+静态全局变量作用域仅限于变量被定义的文件中，其他文件即使用extern声名也无法使用它。准确的说：作用域是从定义之处开始，到文件结尾处结束，在定义之处前面的那些代码也不能使用它。
+静态局部变量在函数体里面定义的，就只</p>
+        
+    
+    <time datetime="2015-07-10T09:05:38.000Z" itemprop="datePublished">2015-07-10</time>
+  </a>
+</section>
+
+
+
+
+
+
+  
+<section class="post" itemscope itemprop="blogitem">
+  
+    <a href="/2015/07/10/ubuntu-install-vmware-tools/" title="Install VMware Tools on Ubuntu without X" itemprop="url">
+  
+    <h1 itemprop="name">Install VMware Tools on Ubuntu without X</h1>
+    
+     
+           <p itemprop="description" >Create a root shell$ sudo -i
+
+Update your sources# apt-get update
+
+Upgrade your installed packages (dist-upgrade to force kernel upgrade)# a</p>
+        
+    
+    <time datetime="2015-07-10T07:52:20.000Z" itemprop="datePublished">2015-07-10</time>
+  </a>
+</section>
+
+
+
+
+
+
+  
+<section class="post" itemscope itemprop="blogitem">
+  
+    <a href="/2015/07/10/c-signed-unsigned/" title="C语言中signed和unsigned导致的溢出" itemprop="url">
+  
+    <h1 itemprop="name">C语言中signed和unsigned导致的溢出</h1>
+    
+     
+           <p itemprop="description" >问题1123456789101112#include&amp;lt;stdio.h&amp;gt;void foo(void)&amp;#123;  unsigned int a = 6;  int b = -20;  (a + b &amp;gt; 6) ? printf(&quot;&amp;gt;6\n&quot;) : print</p>
+        
+    
+    <time datetime="2015-07-10T07:45:20.000Z" itemprop="datePublished">2015-07-10</time>
+  </a>
+</section>
+
+
+
+
+
+
+  
+<section class="post" itemscope itemprop="blogitem">
+  
+    <a href="/2015/07/10/c-sizeof/" title="C语言中的sizeof" itemprop="url">
+  
+    <h1 itemprop="name">C语言中的sizeof</h1>
+    
+     
+           <p itemprop="description" >sizeof是关键字而不是函数以下四个选项，那几个是正确的：int i = 0;(A) sizeof(int)(B) sizeof(i)(C) sizeof int(D) sizeof ;
+答案：在32位系统下(A)，(B)和(D)的值为4，(C)编译器会提示错误，因为int前面</p>
+        
+    
+    <time datetime="2015-07-10T07:25:57.000Z" itemprop="datePublished">2015-07-10</time>
+  </a>
+</section>
+
+
+
+
+
+
+  
+<section class="post" itemscope itemprop="blogitem">
+  
+    <a href="/2015/07/09/hello-world/" title="Hello World" itemprop="url">
   
     <h1 itemprop="name">Hello World</h1>
     
@@ -108,7 +195,29 @@
            <p itemprop="description" >Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the </p>
         
     
-    <time datetime="2015-07-07T08:53:15.000Z" itemprop="datePublished">2015-07-07</time>
+    <time datetime="2015-07-09T06:25:29.000Z" itemprop="datePublished">2015-07-09</time>
+  </a>
+</section>
+
+
+
+
+
+
+  
+<section class="post" itemscope itemprop="blogitem">
+  
+    <a href="/2015/07/09/mac-apache-config/" title="在Mac上配置Apache和php" itemprop="url">
+  
+    <h1 itemprop="name">在Mac上配置Apache和php</h1>
+    
+     
+           <p itemprop="description" >启用php1$ sudo vi /etc/apache2/httpd.conf
+取消下面一行的注释(去掉前边的#)：1LoadModule php5_module libexec/apache2/libphp5.so
+启用每个用户的支持这步操作的目的是启用之后就可以使用http:</p>
+        
+    
+    <time datetime="2015-07-09T06:04:20.000Z" itemprop="datePublished">2015-07-09</time>
   </a>
 </section>
 
@@ -126,11 +235,46 @@
 <aside class="clearfix">
 
   
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/C-C/" title="C/C++">C/C++<sup>3</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Linux-UNIX/" title="Linux/UNIX">Linux/UNIX<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Mac/" title="Mac">Mac<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/iOS/" title="iOS">iOS<sup>1</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
 
   
 <div class="tagslist">
 	<p class="asidetitle">标签</p>
 		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/C/" title="C">C<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Ubuntu/" title="Ubuntu">Ubuntu<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Objective-C/" title="Objective-C">Objective-C<sup>1</sup></a></li>
+			
 		
 			
 				<li><a href="/tags/Apache/" title="Apache">Apache<sup>1</sup></a></li>

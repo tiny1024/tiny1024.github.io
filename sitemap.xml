@@ -2,17 +2,42 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://www.tiny1024.com/2015/07/10/objc-sort-array/</loc>
+    <lastmod>2015-07-10T09:18:40.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://www.tiny1024.com/2015/07/10/c-static/</loc>
+    <lastmod>2015-07-10T09:09:30.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://www.tiny1024.com/2015/07/10/ubuntu-install-vmware-tools/</loc>
+    <lastmod>2015-07-10T08:04:50.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://www.tiny1024.com/2015/07/10/c-signed-unsigned/</loc>
+    <lastmod>2015-07-10T07:48:12.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://www.tiny1024.com/2015/07/10/c-sizeof/</loc>
+    <lastmod>2015-07-10T07:40:45.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://www.tiny1024.com/2015/07/09/mac-apache-config/</loc>
+    <lastmod>2015-07-10T07:33:26.000Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://www.tiny1024.com/about/index.html</loc>
     <lastmod>2015-07-09T06:26:44.000Z</lastmod>
   </url>
   
   <url>
-    <loc>http://www.tiny1024.com/2015/07/09/Apache-Php-Config-On-Yosemite/</loc>
-    <lastmod>2015-07-09T06:24:24.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://www.tiny1024.com/2015/07/07/hello-world/</loc>
+    <loc>http://www.tiny1024.com/2015/07/09/hello-world/</loc>
     <lastmod>2015-07-07T04:39:40.000Z</lastmod>
   </url>
   
