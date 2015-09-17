@@ -1,0 +1,501 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>In-App Purchase | Cherish What You Have at the Moment</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="tiny1024">
+    
+
+    
+    <meta name="description" content="本文代码来源于《iOS开发进阶》第14章：使用应用内支付。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="In-App Purchase">
+<meta property="og:url" content="http://www.tiny1024.com/2015/07/16/ios-in-app-purchase/index.html">
+<meta property="og:site_name" content="Cherish What You Have at the Moment">
+<meta property="og:description" content="本文代码来源于《iOS开发进阶》第14章：使用应用内支付。">
+<meta property="og:updated_time" content="2015-09-17T08:22:54.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="In-App Purchase">
+<meta name="twitter:description" content="本文代码来源于《iOS开发进阶》第14章：使用应用内支付。">
+
+    
+    <link rel="alternative" href="/atom.xml" title="Cherish What You Have at the Moment" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favorite32.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/apple114.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/apple114.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo128.png" alt="Cherish What You Have at the Moment" title="Cherish What You Have at the Moment"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Cherish What You Have at the Moment">Cherish What You Have at the Moment</a></h1>
+				<h2 class="blog-motto">A journey of a thousand miles begins with a single step.</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:www.tiny1024.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/07/16/ios-in-app-purchase/" title="In-App Purchase" itemprop="url">In-App Purchase</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="tiny1024" target="_blank" itemprop="author">tiny1024</a>
+		
+  <p class="article-time">
+    <time datetime="2015-07-16T07:00:25.000Z" itemprop="datePublished"> 发表于 2015-07-16</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#需要添加的framework"><span class="toc-number">1.</span> <span class="toc-text">需要添加的framework</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#需要导入的库"><span class="toc-number">2.</span> <span class="toc-text">需要导入的库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#示例代码"><span class="toc-number">3.</span> <span class="toc-text">示例代码</span></a></li></ol>
+		
+		</div>
+		
+		<p>本文代码来源于《iOS开发进阶》第14章：使用应用内支付。</p>
+<a id="more"></a>
+<h2 id="需要添加的framework">需要添加的framework</h2><p><code>StoreKit.framework</code></p>
+<h2 id="需要导入的库">需要导入的库</h2><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#import <span class="title">&lt;StoreKit/StoreKit.h&gt;</span></span></span><br></pre></td></tr></table></figure>
+<h2 id="示例代码">示例代码</h2><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">PayViewController</span> () &lt;<span class="title">SKProductsRequestDelegate</span>, <span class="title">SKPaymentTransactionObserver</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">PayViewController</span></span></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)viewDidLoad</span><br><span class="line">&#123;</span><br><span class="line">    [<span class="keyword">super</span> viewDidLoad];</span><br><span class="line">    [[SKPaymentQueue defaultQueue] addTransactionObserver:<span class="keyword">self</span>];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)doPay</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> ([SKPaymentQueue canMakePayments]) &#123;</span><br><span class="line">        [<span class="keyword">self</span> getProductInfo];</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="built_in">NSLog</span>(<span class="string">@"失败，用户禁止应用内付费购买"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)getProductInfo</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">NSSet</span> *set = [<span class="built_in">NSSet</span> setWithArray:@[ <span class="string">@"ProductId"</span> ]];</span><br><span class="line">    SKProductsRequest *request = [[SKProductsRequest alloc] initWithProductIdentifiers:set];</span><br><span class="line">    request<span class="variable">.delegate</span> = <span class="keyword">self</span>;</span><br><span class="line">    [request start];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)productsRequest:(SKProductsRequest *)request didReceiveResponse:(SKProductsResponse *)response</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">NSArray</span> *myProduct = response<span class="variable">.products</span>;</span><br><span class="line">    <span class="keyword">if</span> (myProduct<span class="variable">.count</span> == <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="built_in">NSLog</span>(<span class="string">@"无法获取产品信息，购买失败"</span>);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    SKPayment *payment = [SKPayment paymentWithProduct:myProduct[<span class="number">0</span>]];</span><br><span class="line">    [[SKPaymentQueue defaultQueue] addPayment:payment];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)paymentQueue:(SKPaymentQueue *)queue updatedTransactions:(<span class="built_in">NSArray</span> *)transactions</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">for</span> (SKPaymentTransaction *transaction <span class="keyword">in</span> transactions) &#123;</span><br><span class="line">        <span class="keyword">switch</span> (transaction<span class="variable">.transactionState</span>) &#123;</span><br><span class="line">            <span class="keyword">case</span> SKPaymentTransactionStatePurchased:</span><br><span class="line">                <span class="built_in">NSLog</span>(<span class="string">@"transction identifier = %@"</span>, transaction<span class="variable">.transactionIdentifier</span>);</span><br><span class="line">                [<span class="keyword">self</span> completeTransaction:transaction];</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">case</span> SKPaymentTransactionStateFailed:</span><br><span class="line">                [<span class="keyword">self</span> failedTransaction:transaction];</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">case</span> SKPaymentTransactionStateRestored:</span><br><span class="line">                [<span class="keyword">self</span> restoreTransaction:transaction];</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">case</span> SKPaymentTransactionStatePurchasing:</span><br><span class="line">                <span class="built_in">NSLog</span>(<span class="string">@"商品添加进列表"</span>);</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">default</span>:</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)completeTransaction:(SKPaymentTransaction *)transaction</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// Your application should implement these two methods</span></span><br><span class="line">    <span class="built_in">NSString</span> *productIdentifier = transaction<span class="variable">.payment</span><span class="variable">.productIdentifier</span>;</span><br><span class="line">    <span class="keyword">if</span> ([productIdentifier length] &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="comment">// 向自己的服务器验证购买凭证</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Remove the transaction from the payment queue</span></span><br><span class="line">    [[SKPaymentQueue defaultQueue] finishTransaction:transaction];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)failedTransaction:(SKPaymentTransaction *)transaction</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (transaction<span class="variable">.error</span><span class="variable">.code</span> != SKErrorPaymentCancelled) &#123;</span><br><span class="line">        <span class="built_in">NSLog</span>(<span class="string">@"购买失败"</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="built_in">NSLog</span>(<span class="string">@"用户取消交易"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    [[SKPaymentQueue defaultQueue] finishTransaction:transaction];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)restoreTransaction:(SKPaymentTransaction *)transaction</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// 对于已购商品，处理恢复购买的逻辑</span></span><br><span class="line">    [[SKPaymentQueue defaultQueue] finishTransaction:transaction];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/iOS/">iOS</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/In-App-Purchase/">In-App Purchase</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://www.tiny1024.com/2015/07/16/ios-in-app-purchase/" data-title="In-App Purchase | Cherish What You Have at the Moment" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2015/07/16/ios-download-font/"  title="动态下载系统提供的多种中文字体">
+ <strong>下一篇：</strong><br/> 
+ <span>动态下载系统提供的多种中文字体
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#需要添加的framework"><span class="toc-number">1.</span> <span class="toc-text">需要添加的framework</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#需要导入的库"><span class="toc-number">2.</span> <span class="toc-text">需要导入的库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#示例代码"><span class="toc-number">3.</span> <span class="toc-text">示例代码</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/C-C/" title="C/C++">C/C++<sup>3</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Linux-UNIX/" title="Linux/UNIX">Linux/UNIX<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Mac/" title="Mac">Mac<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/iOS/" title="iOS">iOS<sup>5</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/C/" title="C">C<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/iOS/" title="iOS">iOS<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Ubuntu/" title="Ubuntu">Ubuntu<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Objective-C/" title="Objective-C">Objective-C<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Apache/" title="Apache">Apache<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Mac/" title="Mac">Mac<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/plist/" title="plist">plist<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Password-Window/" title="Password Window">Password Window<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/In-App-Purchase/" title="In-App Purchase">In-App Purchase<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/动态下载字体/" title="动态下载字体">动态下载字体<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://coolshell.cn" target="_blank" title="Cool Shell">Cool Shell</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://macshuo.com" target="_blank" title="Mac Talk">Mac Talk</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello, I&#39;m tiny1024. I&#39;m a developer. <br/>
+			This is my blog, nice to meet you.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		<a href="mailto:iqujingwei@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2015 
+		
+		<a href="/about" target="_blank" title="tiny1024">tiny1024</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+        getSize();
+        if (myWidth >= 1024) {
+          c.click();
+        }
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

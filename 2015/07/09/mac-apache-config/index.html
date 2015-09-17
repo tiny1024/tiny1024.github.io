@@ -11,32 +11,26 @@
     
 
     
-    <meta name="description" content="启用php1$ sudo vi /etc/apache2/httpd.conf
-取消下面一行的注释(去掉前边的#)：1LoadModule php5_module libexec/apache2/libphp5.so
-启用每个用户的支持这步操作的目的是启用之后就可以使用http://localhost/~michael/ 来访问每个用户独立的网站。这个的michael是我Mac的用户名。12345">
+    <meta name="description" content="本文描述了如何在 Mac OS X 系统上启用PHP，并启用每个用户独立的网站。最后创建PHP测试页面，重新启动Apache来查看是否成功。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="在Mac上配置Apache和php">
 <meta property="og:url" content="http://www.tiny1024.com/2015/07/09/mac-apache-config/index.html">
 <meta property="og:site_name" content="Cherish What You Have at the Moment">
-<meta property="og:description" content="启用php1$ sudo vi /etc/apache2/httpd.conf
-取消下面一行的注释(去掉前边的#)：1LoadModule php5_module libexec/apache2/libphp5.so
-启用每个用户的支持这步操作的目的是启用之后就可以使用http://localhost/~michael/ 来访问每个用户独立的网站。这个的michael是我Mac的用户名。12345">
-<meta property="og:updated_time" content="2015-07-10T07:33:26.000Z">
+<meta property="og:description" content="本文描述了如何在 Mac OS X 系统上启用PHP，并启用每个用户独立的网站。最后创建PHP测试页面，重新启动Apache来查看是否成功。">
+<meta property="og:updated_time" content="2015-09-17T06:08:15.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="在Mac上配置Apache和php">
-<meta name="twitter:description" content="启用php1$ sudo vi /etc/apache2/httpd.conf
-取消下面一行的注释(去掉前边的#)：1LoadModule php5_module libexec/apache2/libphp5.so
-启用每个用户的支持这步操作的目的是启用之后就可以使用http://localhost/~michael/ 来访问每个用户独立的网站。这个的michael是我Mac的用户名。12345">
+<meta name="twitter:description" content="本文描述了如何在 Mac OS X 系统上启用PHP，并启用每个用户独立的网站。最后创建PHP测试页面，重新启动Apache来查看是否成功。">
 
     
     <link rel="alternative" href="/atom.xml" title="Cherish What You Have at the Moment" type="application/atom+xml">
     
     
-    <link rel="icon" href="/img/favicon.ico">
+    <link rel="icon" href="/img/favorite32.ico">
     
     
-    <link rel="apple-touch-icon" href="/img/jacman.jpg">
-    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon" href="/img/apple114.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/apple114.jpg">
     
     <link rel="stylesheet" href="/css/style.css" type="text/css">
 </head>
@@ -47,7 +41,7 @@
 <div>
 		
 			<div id="imglogo">
-				<a href="/"><img src="/img/logo.png" alt="Cherish What You Have at the Moment" title="Cherish What You Have at the Moment"/></a>
+				<a href="/"><img src="/img/logo128.png" alt="Cherish What You Have at the Moment" title="Cherish What You Have at the Moment"/></a>
 			</div>
 			
 			<div id="textlogo">
@@ -102,19 +96,22 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#启用php"><span class="toc-number">1.</span> <span class="toc-text">启用php</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#启用每个用户的支持"><span class="toc-number">2.</span> <span class="toc-text">启用每个用户的支持</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#创建php测试页"><span class="toc-number">3.</span> <span class="toc-text">创建php测试页</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#重新启动_apache"><span class="toc-number">4.</span> <span class="toc-text">重新启动 apache</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#启用php"><span class="toc-number">1.</span> <span class="toc-text">启用php</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#启用每个用户的支持"><span class="toc-number">2.</span> <span class="toc-text">启用每个用户的支持</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#创建PHP测试页"><span class="toc-number">3.</span> <span class="toc-text">创建PHP测试页</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#重新启动_Apache"><span class="toc-number">4.</span> <span class="toc-text">重新启动 Apache</span></a></li></ol>
 		
 		</div>
 		
-		<h2 id="启用php">启用php</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo vi /etc/apache2/httpd.conf</span><br></pre></td></tr></table></figure>
+		<p>本文描述了如何在 Mac OS X 系统上启用PHP，并启用每个用户独立的网站。最后创建PHP测试页面，重新启动Apache来查看是否成功。</p>
+<a id="more"></a>
+<h2 id="启用php">启用php</h2><p>打开Apache2的配置文件：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo vi /etc/apache2/httpd.conf</span><br></pre></td></tr></table></figure></p>
 <p>取消下面一行的注释(去掉前边的#)：<br><figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword"><span class="common">LoadModule</span></span> php5_module libexec/apache2/libphp5.so</span><br></pre></td></tr></table></figure></p>
-<h2 id="启用每个用户的支持">启用每个用户的支持</h2><p>这步操作的目的是启用之后就可以使用<a href="http://localhost/~michael/" target="_blank" rel="external">http://localhost/~michael/</a> 来访问每个用户独立的网站。<br>这个的michael是我Mac的用户名。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ sudo mkdir ~/Sites/</span><br><span class="line">$ sudo vi /etc/apache2/users/michael.conf</span><br><span class="line">在michael.conf中添加如下的配置：</span><br><span class="line">&lt;Directory <span class="string">"/Users/michael/Sites/"</span>&gt;</span><br><span class="line">    Options Indexes MultiViews</span><br><span class="line">    AllowOverride None</span><br><span class="line">    Require all granted</span><br><span class="line">&lt;/Directory&gt;</span><br></pre></td></tr></table></figure></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">修改文件的权限：</span><br><span class="line">$ sudo chmod <span class="number">775</span> /etc/apache2/users/michael.conf</span><br><span class="line">$ sudo vi /etc/apache2/httpd.conf</span><br><span class="line">取消以下几行的注释：</span><br><span class="line">LoadModule authz_core_module libexec/apache2/mod_authz_core.so</span><br><span class="line">LoadModule authz_host_module libexec/apache2/mod_authz_host.so</span><br><span class="line">LoadModule userdir_module libexec/apache2/mod_userdir.so</span><br><span class="line">Include /private/etc/apache2/extra/httpd-userdir.conf</span><br></pre></td></tr></table></figure>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ sudo vi /etc/apache2/extra/httpd-userdir.conf</span><br><span class="line">取消以下一行的注释：</span><br><span class="line">Include /private/etc/apache2/users/*.conf</span><br></pre></td></tr></table></figure>
-<h2 id="创建php测试页">创建php测试页</h2><p>在~/Sites/下创建test.php，输入以下内容：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="php"><span class="preprocessor">&lt;?php</span></span><br><span class="line">phpinfo()</span><br><span class="line"><span class="preprocessor">?&gt;</span></span></span><br></pre></td></tr></table></figure></p>
-<h2 id="重新启动_apache">重新启动 apache</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apachectl restart</span><br></pre></td></tr></table></figure>
+<h2 id="启用每个用户的支持">启用每个用户的支持</h2><p>这步操作的目的是启用之后就可以使用<a href="http://localhost/~michael/" target="_blank" rel="external">http://localhost/~michael/</a> 来访问每个用户独立的网站。<br>这里边的michael是我登录Mac的用户名。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ sudo mkdir ~/Sites/</span><br><span class="line">$ sudo vi /etc/apache2/users/michael.conf</span><br><span class="line"><span class="comment"># 在michael.conf中添加如下的配置：</span></span><br><span class="line">&lt;Directory <span class="string">"/Users/michael/Sites/"</span>&gt;</span><br><span class="line">    Options Indexes MultiViews</span><br><span class="line">    AllowOverride None</span><br><span class="line">    Require all granted</span><br><span class="line">&lt;/Directory&gt;</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 修改文件的权限：</span></span><br><span class="line">$ sudo chmod <span class="number">775</span> /etc/apache2/users/michael.conf</span><br><span class="line">$ sudo vi /etc/apache2/httpd.conf</span><br><span class="line"><span class="comment"># 取消以下几行的注释(去掉前边的#)：</span></span><br><span class="line">LoadModule authz_core_module libexec/apache2/mod_authz_core.so</span><br><span class="line">LoadModule authz_host_module libexec/apache2/mod_authz_host.so</span><br><span class="line">LoadModule userdir_module libexec/apache2/mod_userdir.so</span><br><span class="line">Include /private/etc/apache2/extra/httpd-userdir.conf</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ sudo vi /etc/apache2/extra/httpd-userdir.conf</span><br><span class="line"><span class="comment"># 取消以下一行的注释：</span></span><br><span class="line">Include /private/etc/apache2/users/*.conf</span><br></pre></td></tr></table></figure>
+<h2 id="创建PHP测试页">创建PHP测试页</h2><p>在~/Sites/下创建test.php，输入以下内容：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="php"><span class="preprocessor">&lt;?php</span></span><br><span class="line">    phpinfo()</span><br><span class="line"><span class="preprocessor">?&gt;</span></span></span><br></pre></td></tr></table></figure></p>
+<h2 id="重新启动_Apache">重新启动 Apache</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apachectl restart</span><br></pre></td></tr></table></figure>
 <p>打开<a href="http://localhost/~michael/test.php" target="_blank" rel="external">http://localhost/~michael/test.php</a><br>如果看到php相关的版本信息，就说明成功了！</p>
-<p>如果没有看到php相关的版本信息，请做一下检查：</p>
+<p>如果没有看到php相关的版本信息，请做以下检查：</p>
 <ol>
 <li>检查Apache是否已经成功启动(可以查看是否有httpd进程: $ ps aux | grep httpd)</li>
 <li>如果没有成功启动，检查配置文件</li>
@@ -156,13 +153,21 @@
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2015/07/09/hello-world/" title="Hello World">
+ <a href="/2015/07/10/c-sizeof/" title="C语言中的sizeof">
   <strong>上一篇：</strong><br/>
   <span>
-  Hello World</span>
+  C语言中的sizeof</span>
 </a>
 </div>
 
+
+<div class="next">
+<a href="/2015/07/09/hello-world/"  title="Hello World">
+ <strong>下一篇：</strong><br/> 
+ <span>Hello World
+</span>
+</a>
+</div>
 
 </nav>
 
@@ -174,7 +179,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#启用php"><span class="toc-number">1.</span> <span class="toc-text">启用php</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#启用每个用户的支持"><span class="toc-number">2.</span> <span class="toc-text">启用每个用户的支持</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#创建php测试页"><span class="toc-number">3.</span> <span class="toc-text">创建php测试页</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#重新启动_apache"><span class="toc-number">4.</span> <span class="toc-text">重新启动 apache</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#启用php"><span class="toc-number">1.</span> <span class="toc-text">启用php</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#启用每个用户的支持"><span class="toc-number">2.</span> <span class="toc-text">启用每个用户的支持</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#创建PHP测试页"><span class="toc-number">3.</span> <span class="toc-text">创建PHP测试页</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#重新启动_Apache"><span class="toc-number">4.</span> <span class="toc-text">重新启动 Apache</span></a></li></ol>
  
   </div>
 
@@ -200,7 +205,7 @@
 		  
 		
 		  
-			<li><a href="/categories/iOS/" title="iOS">iOS<sup>1</sup></a></li>
+			<li><a href="/categories/iOS/" title="iOS">iOS<sup>5</sup></a></li>
 		  
 		
 		</ul>
@@ -217,6 +222,10 @@
 			
 		
 			
+				<li><a href="/tags/iOS/" title="iOS">iOS<sup>2</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/Ubuntu/" title="Ubuntu">Ubuntu<sup>1</sup></a></li>
 			
 		
@@ -230,6 +239,22 @@
 		
 			
 				<li><a href="/tags/Mac/" title="Mac">Mac<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/plist/" title="plist">plist<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Password-Window/" title="Password Window">Password Window<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/In-App-Purchase/" title="In-App Purchase">In-App Purchase<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/动态下载字体/" title="动态下载字体">动态下载字体<sup>1</sup></a></li>
 			
 		
 		</ul>
@@ -271,8 +296,8 @@
 	
 	
 	<section class="info">
-		<p> Hello ,I&#39;m tiny1024. <br/>
-			This is my blog, believe it or not.</p>
+		<p> Hello, I&#39;m tiny1024. I&#39;m a developer. <br/>
+			This is my blog, nice to meet you.</p>
 	</section>
 	 
 	<div class="social-font" class="clearfix">
@@ -285,6 +310,8 @@
 		
 		
 		
+		
+		<a href="mailto:iqujingwei@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
 		
 	</div>
 			
