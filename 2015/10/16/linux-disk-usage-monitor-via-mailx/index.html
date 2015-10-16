@@ -4,23 +4,23 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>C语言中signed和unsigned导致的溢出 | Tiny1024&#39;s Blog</title>
+    <title>Linux监控磁盘剩余空间 | Tiny1024&#39;s Blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="tiny1024">
     
 
     
-    <meta name="description" content="本文分析两个由于signed和unsigned导致的溢出的问题。">
+    <meta name="description" content="本文简单介绍如何收集Linux上磁盘的使用情况，并用mailx发送到指定的邮箱。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="C语言中signed和unsigned导致的溢出">
-<meta property="og:url" content="http://www.tiny1024.com/2015/07/10/c-signed-unsigned/index.html">
+<meta property="og:title" content="Linux监控磁盘剩余空间">
+<meta property="og:url" content="http://www.tiny1024.com/2015/10/16/linux-disk-usage-monitor-via-mailx/index.html">
 <meta property="og:site_name" content="Tiny1024's Blog">
-<meta property="og:description" content="本文分析两个由于signed和unsigned导致的溢出的问题。">
-<meta property="og:updated_time" content="2015-09-17T07:20:06.000Z">
+<meta property="og:description" content="本文简单介绍如何收集Linux上磁盘的使用情况，并用mailx发送到指定的邮箱。">
+<meta property="og:updated_time" content="2015-10-16T06:54:16.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="C语言中signed和unsigned导致的溢出">
-<meta name="twitter:description" content="本文分析两个由于signed和unsigned导致的溢出的问题。">
+<meta name="twitter:title" content="Linux监控磁盘剩余空间">
+<meta name="twitter:description" content="本文简单介绍如何收集Linux上磁盘的使用情况，并用mailx发送到指定的邮箱。">
 
     
     <link rel="alternative" href="/atom.xml" title="Tiny1024&#39;s Blog" type="application/atom+xml">
@@ -80,14 +80,14 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/07/10/c-signed-unsigned/" title="C语言中signed和unsigned导致的溢出" itemprop="url">C语言中signed和unsigned导致的溢出</a>
+      <a href="/2015/10/16/linux-disk-usage-monitor-via-mailx/" title="Linux监控磁盘剩余空间" itemprop="url">Linux监控磁盘剩余空间</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="tiny1024" target="_blank" itemprop="author">tiny1024</a>
 		
   <p class="article-time">
-    <time datetime="2015-07-10T07:45:20.000Z" itemprop="datePublished"> 发表于 2015-07-10</time>
+    <time datetime="2015-10-16T05:49:16.000Z" itemprop="datePublished"> 发表于 2015-10-16</time>
     
   </p>
 </header>
@@ -96,16 +96,63 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#问题1"><span class="toc-number">1.</span> <span class="toc-text">问题1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#问题2"><span class="toc-number">2.</span> <span class="toc-text">问题2</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#我的测试系统基本信息"><span class="toc-number">1.</span> <span class="toc-text">我的测试系统基本信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#获取磁盘使用情况"><span class="toc-number">2.</span> <span class="toc-text">获取磁盘使用情况</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置mailx"><span class="toc-number">3.</span> <span class="toc-text">配置mailx</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置crontab"><span class="toc-number">4.</span> <span class="toc-text">配置crontab</span></a></li></ol>
 		
 		</div>
 		
-		<p>本文分析两个由于signed和unsigned导致的溢出的问题。</p>
+		<p>本文简单介绍如何收集Linux上磁盘的使用情况，并用mailx发送到指定的邮箱。</p>
 <a id="more"></a>
-<h2 id="问题1">问题1</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span><span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">foo</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">int</span> a = <span class="number">6</span>;</span><br><span class="line">  <span class="keyword">int</span> b = -<span class="number">20</span>;</span><br><span class="line">  (a + b &gt; <span class="number">6</span>) ? <span class="built_in">printf</span>(<span class="string">"&gt;6\n"</span>) : <span class="built_in">printf</span>(<span class="string">"&lt;=6\n"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  foo();</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>结果：&gt;6<br>分析：a+b这里做了隐式的转换，把int转化为unsigned int。编译器就会把b当作一个很大的正数。</p>
-<h2 id="问题2">问题2</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span><span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span><span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">bar</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">signed</span> <span class="keyword">char</span> a[<span class="number">1000</span>];</span><br><span class="line">  <span class="keyword">int</span> i;</span><br><span class="line">  <span class="keyword">for</span>(i = <span class="number">0</span>; i &lt; <span class="number">1000</span>; i++) &#123;</span><br><span class="line">    a[i] = -<span class="number">1</span> - i;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"%d\n"</span>, (<span class="keyword">int</span>)<span class="built_in">strlen</span>(a));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  bar();</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>结果：255<br>分析：在计算机中数值使用补码来进行表示。signed char类型表示值的范围是[-128, 127]。<br>当i=0时，a[0]=-1，补码为0xFF；<br>当i=1时，a[1]=-2，补码为0xFE；<br>……<br>当i=127时，a[127]=-128，补码为0x80，而-128是char类型所能表示的最小的负数。<br>当i=128时，a[128]=127(-129)，但是这时候发生了溢出，-129需要9位才能保存下来，而char类型数据只有8位，所以最高位被丢弃。剩下的8位是原来9位补码的低8位的值，故补码的值为0x7F，(-129)=(1 1000 0001)原码=(1 0111 1111)补码；<br>……<br>当i=255时，a[255]=0(-256)，补码为0x00，(-256)=(11 0000 0000)原码=(11 0000 0000)补码；<br>当i=256时，a[256]=-1(-257)，补码为0xFF;<br>……<br>按照上面的分析，a[0]到a[254]里面的值都不为0，而a[255]里的值为0。strlen函数是计算字符串长度的，并不包含字符串最后的’\0’。判断一个字符串是否结束的标志就是看是否遇到’\0’；如果遇到，则认为本字符串结束。</p>
+<h2 id="我的测试系统基本信息">我的测试系统基本信息</h2><table>
+<thead>
+<tr>
+<th>-</th>
+<th>版本</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OS</td>
+<td>CentOS 6.6</td>
+<td>使用<code>lsb_release -a</code>查看</td>
+</tr>
+<tr>
+<td>mailx</td>
+<td>Version 12.4</td>
+<td>使用<code>mailx -V</code>查看</td>
+</tr>
+</tbody>
+</table>
+<h2 id="获取磁盘使用情况">获取磁盘使用情况</h2><p>使用如下脚本创建文件<code>/opt/monitor/monitor.sh</code>。并设置磁盘使用量警告阈值，和准备收到警告邮件的邮箱地址。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="shebang">#!/bin/sh</span></span><br><span class="line"><span class="built_in">limit</span>=<span class="number">85</span> <span class="comment">#如果磁盘使用量超过这个值，就回自动发送邮件</span></span><br><span class="line">time=`date <span class="string">"+%F %H:%M:%S"</span>`;</span><br><span class="line">mail=<span class="string">"target@xxxx.com"</span>; <span class="comment">#关于磁盘信息的邮件会发送到这个邮箱</span></span><br><span class="line">file=/tmp/checkdisk.txt</span><br><span class="line">info=`df -h | grep xvda1`</span><br><span class="line">percent=`df -h | grep <span class="string">'xvda1'</span> | awk <span class="string">'&#123;print int($5)&#125;'</span>`; <span class="comment">#修改xvda1来过滤出需要关心的磁盘</span></span><br><span class="line">touch /tmp/checkdisk.txt</span><br><span class="line"><span class="built_in">echo</span> <span class="string">"Time: <span class="variable">$time</span>"</span>  &gt; <span class="variable">$file</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"Disk Used: <span class="variable">$percent</span>%"</span> &gt;&gt; <span class="variable">$file</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"Info: <span class="variable">$info</span>"</span> &gt;&gt; <span class="variable">$file</span></span><br><span class="line"><span class="keyword">if</span> [[ <span class="string">"<span class="variable">$percent</span>"</span> &gt; <span class="string">"<span class="variable">$limit</span>"</span> ]]; <span class="keyword">then</span></span><br><span class="line">    /bin/mailx <span class="operator">-s</span> <span class="string">"Warn: <span class="variable">$HOSTNAME</span> disk is full"</span> <span class="variable">$mail</span> &lt; <span class="variable">$file</span></span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="配置mailx">配置mailx</h2><p>在用户的home目录<code>~</code>下创建文件<code>.mailrc</code>，并添加以下内容：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">set</span> <span class="keyword">from</span>=sender@xxxx.com</span><br><span class="line"><span class="keyword">set</span> smtp=smtp.exmail.qq.com</span><br><span class="line"><span class="keyword">set</span> smtp-auth=login</span><br><span class="line"><span class="keyword">set</span> smtp-auth-<span class="keyword">user</span>=sender@xxxx.com</span><br><span class="line"><span class="keyword">set</span> smtp-auth-<span class="keyword">password</span>=XXXX</span><br><span class="line"><span class="keyword">set</span> ssl-<span class="keyword">verify</span>=<span class="keyword">ignore</span></span></span><br></pre></td></tr></table></figure></p>
+<table>
+<thead>
+<tr>
+<th>配置项</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>from</td>
+<td>发送邮件的邮箱地址</td>
+</tr>
+<tr>
+<td>smtp</td>
+<td>SMTP服务器的地址，上边的例子是腾讯企业邮</td>
+</tr>
+<tr>
+<td>smtp-auth-user</td>
+<td>发送者邮箱</td>
+</tr>
+<tr>
+<td>smtp-auth-password</td>
+<td>发送者邮箱的密码，密码为明文</td>
+</tr>
+</tbody>
+</table>
+<h2 id="配置crontab">配置crontab</h2><p>以上两步配置完成，就可以手动执行<code>monitor.sh</code>进行测试。<br>如果邮件未能发送成功，可以修改脚本显示详细的邮件发送状况：<br>把<code>monitor.sh</code>中的<code>/bin/mailx -s</code>改为<code>/bin/mailx -v -s</code>。</p>
+<p>如果邮件可以发送成功，接下来使用crontab设置每两个小时自动调用<code>monitor.sh</code>。<br>运行<code>crontab -e</code>，输入<code>* */2 * * * /opt/monitor/monitor.sh</code></p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -113,13 +160,13 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/C-C/">C/C++</a>
+  <a class="article-category-link" href="/categories/Linux/">Linux</a>
 </div>
 
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/C/">C</a>
+  <span></span> <a href="/tags/Linux/">Linux</a><a href="/tags/mailx/">mailx</a>
   </div>
 
 </div>
@@ -128,7 +175,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://www.tiny1024.com/2015/07/10/c-signed-unsigned/" data-title="C语言中signed和unsigned导致的溢出 | Tiny1024&#39;s Blog" data-tsina="null" class="share clearfix">
+	  <div data-url="http://www.tiny1024.com/2015/10/16/linux-disk-usage-monitor-via-mailx/" data-title="Linux监控磁盘剩余空间 | Tiny1024&#39;s Blog" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -141,19 +188,11 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2015/07/10/ubuntu-install-vmware-tools/" title="Install VMware Tools on Ubuntu without X">
-  <strong>上一篇：</strong><br/>
-  <span>
-  Install VMware Tools on Ubuntu without X</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2015/07/10/c-sizeof/"  title="C语言中的sizeof">
+<a href="/2015/09/18/swift-anygenerator/"  title="Swift AnyGenerator">
  <strong>下一篇：</strong><br/> 
- <span>C语言中的sizeof
+ <span>Swift AnyGenerator
 </span>
 </a>
 </div>
@@ -168,7 +207,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#问题1"><span class="toc-number">1.</span> <span class="toc-text">问题1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#问题2"><span class="toc-number">2.</span> <span class="toc-text">问题2</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#我的测试系统基本信息"><span class="toc-number">1.</span> <span class="toc-text">我的测试系统基本信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#获取磁盘使用情况"><span class="toc-number">2.</span> <span class="toc-text">获取磁盘使用情况</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置mailx"><span class="toc-number">3.</span> <span class="toc-text">配置mailx</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置crontab"><span class="toc-number">4.</span> <span class="toc-text">配置crontab</span></a></li></ol>
  
   </div>
 

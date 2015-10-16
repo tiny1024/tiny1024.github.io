@@ -4,7 +4,7 @@
   <subtitle><![CDATA[A journey of a thousand miles begins with a single step.]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://www.tiny1024.com/"/>
-  <updated>2015-09-18T10:24:48.000Z</updated>
+  <updated>2015-10-16T06:54:16.000Z</updated>
   <id>http://www.tiny1024.com/</id>
   
   <author>
@@ -13,6 +13,79 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[Linux监控磁盘剩余空间]]></title>
+    <link href="http://www.tiny1024.com/2015/10/16/linux-disk-usage-monitor-via-mailx/"/>
+    <id>http://www.tiny1024.com/2015/10/16/linux-disk-usage-monitor-via-mailx/</id>
+    <published>2015-10-16T05:49:16.000Z</published>
+    <updated>2015-10-16T06:54:16.000Z</updated>
+    <content type="html"><![CDATA[<p>本文简单介绍如何收集Linux上磁盘的使用情况，并用mailx发送到指定的邮箱。</p>
+<a id="more"></a>
+<h2 id="我的测试系统基本信息">我的测试系统基本信息</h2><table>
+<thead>
+<tr>
+<th>-</th>
+<th>版本</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OS</td>
+<td>CentOS 6.6</td>
+<td>使用<code>lsb_release -a</code>查看</td>
+</tr>
+<tr>
+<td>mailx</td>
+<td>Version 12.4</td>
+<td>使用<code>mailx -V</code>查看</td>
+</tr>
+</tbody>
+</table>
+<h2 id="获取磁盘使用情况">获取磁盘使用情况</h2><p>使用如下脚本创建文件<code>/opt/monitor/monitor.sh</code>。并设置磁盘使用量警告阈值，和准备收到警告邮件的邮箱地址。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="shebang">#!/bin/sh</span></span><br><span class="line"><span class="built_in">limit</span>=<span class="number">85</span> <span class="comment">#如果磁盘使用量超过这个值，就回自动发送邮件</span></span><br><span class="line">time=`date <span class="string">"+%F %H:%M:%S"</span>`;</span><br><span class="line">mail=<span class="string">"target@xxxx.com"</span>; <span class="comment">#关于磁盘信息的邮件会发送到这个邮箱</span></span><br><span class="line">file=/tmp/checkdisk.txt</span><br><span class="line">info=`df -h | grep xvda1`</span><br><span class="line">percent=`df -h | grep <span class="string">'xvda1'</span> | awk <span class="string">'&#123;print int($5)&#125;'</span>`; <span class="comment">#修改xvda1来过滤出需要关心的磁盘</span></span><br><span class="line">touch /tmp/checkdisk.txt</span><br><span class="line"><span class="built_in">echo</span> <span class="string">"Time: <span class="variable">$time</span>"</span>  &gt; <span class="variable">$file</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"Disk Used: <span class="variable">$percent</span>%"</span> &gt;&gt; <span class="variable">$file</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"Info: <span class="variable">$info</span>"</span> &gt;&gt; <span class="variable">$file</span></span><br><span class="line"><span class="keyword">if</span> [[ <span class="string">"<span class="variable">$percent</span>"</span> &gt; <span class="string">"<span class="variable">$limit</span>"</span> ]]; <span class="keyword">then</span></span><br><span class="line">    /bin/mailx <span class="operator">-s</span> <span class="string">"Warn: <span class="variable">$HOSTNAME</span> disk is full"</span> <span class="variable">$mail</span> &lt; <span class="variable">$file</span></span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="配置mailx">配置mailx</h2><p>在用户的home目录<code>~</code>下创建文件<code>.mailrc</code>，并添加以下内容：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">set</span> <span class="keyword">from</span>=sender@xxxx.com</span><br><span class="line"><span class="keyword">set</span> smtp=smtp.exmail.qq.com</span><br><span class="line"><span class="keyword">set</span> smtp-auth=login</span><br><span class="line"><span class="keyword">set</span> smtp-auth-<span class="keyword">user</span>=sender@xxxx.com</span><br><span class="line"><span class="keyword">set</span> smtp-auth-<span class="keyword">password</span>=XXXX</span><br><span class="line"><span class="keyword">set</span> ssl-<span class="keyword">verify</span>=<span class="keyword">ignore</span></span></span><br></pre></td></tr></table></figure></p>
+<table>
+<thead>
+<tr>
+<th>配置项</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>from</td>
+<td>发送邮件的邮箱地址</td>
+</tr>
+<tr>
+<td>smtp</td>
+<td>SMTP服务器的地址，上边的例子是腾讯企业邮</td>
+</tr>
+<tr>
+<td>smtp-auth-user</td>
+<td>发送者邮箱</td>
+</tr>
+<tr>
+<td>smtp-auth-password</td>
+<td>发送者邮箱的密码，密码为明文</td>
+</tr>
+</tbody>
+</table>
+<h2 id="配置crontab">配置crontab</h2><p>以上两步配置完成，就可以手动执行<code>monitor.sh</code>进行测试。<br>如果邮件未能发送成功，可以修改脚本显示详细的邮件发送状况：<br>把<code>monitor.sh</code>中的<code>/bin/mailx -s</code>改为<code>/bin/mailx -v -s</code>。</p>
+<p>如果邮件可以发送成功，接下来使用crontab设置每两个小时自动调用<code>monitor.sh</code>。<br>运行<code>crontab -e</code>，输入<code>* */2 * * * /opt/monitor/monitor.sh</code></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>本文简单介绍如何收集Linux上磁盘的使用情况，并用mailx发送到指定的邮箱。</p>]]>
+    
+    </summary>
+    
+      <category term="Linux" scheme="http://www.tiny1024.com/tags/Linux/"/>
+    
+      <category term="mailx" scheme="http://www.tiny1024.com/tags/mailx/"/>
+    
+      <category term="Linux" scheme="http://www.tiny1024.com/categories/Linux/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[Swift AnyGenerator]]></title>
