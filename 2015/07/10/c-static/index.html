@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>C语言中的static | Cherish What You Have at the Moment</title>
+    <title>C语言中的static | Tiny1024&#39;s Blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="tiny1024">
@@ -15,15 +15,15 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="C语言中的static">
 <meta property="og:url" content="http://www.tiny1024.com/2015/07/10/c-static/index.html">
-<meta property="og:site_name" content="Cherish What You Have at the Moment">
+<meta property="og:site_name" content="Tiny1024's Blog">
 <meta property="og:description" content="本文介绍C语言中的static关键字，包括修饰变量和函数，其中修饰变量包括静态全局变量和静态局部变量。">
-<meta property="og:updated_time" content="2015-09-17T07:39:26.000Z">
+<meta property="og:updated_time" content="2015-09-17T07:39:27.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="C语言中的static">
 <meta name="twitter:description" content="本文介绍C语言中的static关键字，包括修饰变量和函数，其中修饰变量包括静态全局变量和静态局部变量。">
 
     
-    <link rel="alternative" href="/atom.xml" title="Cherish What You Have at the Moment" type="application/atom+xml">
+    <link rel="alternative" href="/atom.xml" title="Tiny1024&#39;s Blog" type="application/atom+xml">
     
     
     <link rel="icon" href="/img/favorite32.ico">
@@ -41,11 +41,11 @@
 <div>
 		
 			<div id="imglogo">
-				<a href="/"><img src="/img/logo128.png" alt="Cherish What You Have at the Moment" title="Cherish What You Have at the Moment"/></a>
+				<a href="/"><img src="/img/logo128.png" alt="Tiny1024&#39;s Blog" title="Tiny1024&#39;s Blog"/></a>
 			</div>
 			
 			<div id="textlogo">
-				<h1 class="site-name"><a href="/" title="Cherish What You Have at the Moment">Cherish What You Have at the Moment</a></h1>
+				<h1 class="site-name"><a href="/" title="Tiny1024&#39;s Blog">Tiny1024&#39;s Blog</a></h1>
 				<h2 class="blog-motto">A journey of a thousand miles begins with a single step.</h2>
 			</div>
 			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
@@ -105,7 +105,7 @@
 <h2 id="修饰变量">修饰变量</h2><p>变量又分为局部变量和全局变量，它们都存在内存的静态区。</p>
 <h3 id="静态全局变量">静态全局变量</h3><p>作用域仅限于变量被定义的文件中，其他文件即使用extern声名也无法使用它。准确的说：作用域是从定义之处开始，到文件结尾处结束，在定义之处前面的那些代码也不能使用它。</p>
 <h3 id="静态局部变量">静态局部变量</h3><p>在函数体里面定义的，就只能在这个函数里用了，同一个文档中的其它函数也用不了。由于被static修饰的变量总是在内存的静态区，所以即使这个函数运行结束，这个静态变量的值也不会被销毁，函数下次使用时仍然能用到这个值。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span>&lt;stdio.h&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">int</span> j;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">fun1</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">static</span> <span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">  i++;</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"## i = %d\n"</span>, i);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">fun2</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</span><br><span class="line">  j = <span class="number">0</span>;</span><br><span class="line">  j++;</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"== j = %d\n"</span>, j);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> k = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">for</span>(k = <span class="number">0</span>; k &lt; <span class="number">5</span>; k++) &#123;</span><br><span class="line">    fun1();</span><br><span class="line">    fun2();</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span><span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">int</span> j;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">fun1</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">static</span> <span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">  i++;</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"## i = %d\n"</span>, i);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">fun2</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</span><br><span class="line">  j = <span class="number">0</span>;</span><br><span class="line">  j++;</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"== j = %d\n"</span>, j);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> k = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">for</span>(k = <span class="number">0</span>; k &lt; <span class="number">5</span>; k++) &#123;</span><br><span class="line">    fun1();</span><br><span class="line">    fun2();</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>程序运行结果为：<br><figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">## i = 1</span><br><span class="line"><span class="header">== j = 1</span></span><br><span class="line">## i = 2</span><br><span class="line"><span class="header">== j = 1</span></span><br><span class="line">## i = 3</span><br><span class="line"><span class="header">== j = 1</span></span><br><span class="line">## i = 4</span><br><span class="line"><span class="header">== j = 1</span></span><br><span class="line">## i = 5</span><br><span class="line"><span class="header">== j = 1</span></span><br></pre></td></tr></table></figure></p>
 <h2 id="修饰函数">修饰函数</h2><p>函数前加static使得函数成为静态函数。<br>但此处static的含义不是指存储方式，而是指对函数的作用域仅局限于本文件（所以又称内部函数）。<br>使用内部函数的好处是：不同的人编写不同的函数时，不用担心自己定义的函数是否会与其他文件中的函数同名。</p>
   
@@ -130,7 +130,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://www.tiny1024.com/2015/07/10/c-static/" data-title="C语言中的static | Cherish What You Have at the Moment" data-tsina="null" class="share clearfix">
+	  <div data-url="http://www.tiny1024.com/2015/07/10/c-static/" data-title="C语言中的static | Tiny1024&#39;s Blog" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -196,7 +196,11 @@
 		  
 		
 		  
-			<li><a href="/categories/iOS/" title="iOS">iOS<sup>5</sup></a></li>
+			<li><a href="/categories/Swift/" title="Swift">Swift<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/iOS/" title="iOS">iOS<sup>6</sup></a></li>
 		  
 		
 		</ul>
@@ -209,15 +213,23 @@
 		<ul class="clearfix">
 		
 			
+				<li><a href="/tags/iOS/" title="iOS">iOS<sup>3</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/C/" title="C">C<sup>3</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/iOS/" title="iOS">iOS<sup>2</sup></a></li>
+				<li><a href="/tags/Swift/" title="Swift">Swift<sup>2</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/Ubuntu/" title="Ubuntu">Ubuntu<sup>1</sup></a></li>
+				<li><a href="/tags/plist/" title="plist">plist<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/AnyGenerator/" title="AnyGenerator">AnyGenerator<sup>1</sup></a></li>
 			
 		
 			
@@ -233,11 +245,27 @@
 			
 		
 			
-				<li><a href="/tags/plist/" title="plist">plist<sup>1</sup></a></li>
+				<li><a href="/tags/Assert/" title="Assert">Assert<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Precondition/" title="Precondition">Precondition<sup>1</sup></a></li>
 			
 		
 			
 				<li><a href="/tags/Password-Window/" title="Password Window">Password Window<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/MailCore2/" title="MailCore2">MailCore2<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Gmail/" title="Gmail">Gmail<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/OAuth2/" title="OAuth2">OAuth2<sup>1</sup></a></li>
 			
 		
 			
@@ -246,6 +274,10 @@
 		
 			
 				<li><a href="/tags/动态下载字体/" title="动态下载字体">动态下载字体<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Ubuntu/" title="Ubuntu">Ubuntu<sup>1</sup></a></li>
 			
 		
 		</ul>

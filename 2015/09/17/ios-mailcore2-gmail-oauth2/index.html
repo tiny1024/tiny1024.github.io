@@ -1,0 +1,634 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>iOS MailCore2 Gmail OAuth2 | Tiny1024&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="tiny1024">
+    
+
+    
+    <meta name="description" content="本文简单介绍如何在iOS应用中使用mailcore2库，通过OAuth2认证连接Gmail邮箱。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS MailCore2 Gmail OAuth2">
+<meta property="og:url" content="http://www.tiny1024.com/2015/09/17/ios-mailcore2-gmail-oauth2/index.html">
+<meta property="og:site_name" content="Tiny1024's Blog">
+<meta property="og:description" content="本文简单介绍如何在iOS应用中使用mailcore2库，通过OAuth2认证连接Gmail邮箱。">
+<meta property="og:updated_time" content="2015-09-18T10:10:30.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS MailCore2 Gmail OAuth2">
+<meta name="twitter:description" content="本文简单介绍如何在iOS应用中使用mailcore2库，通过OAuth2认证连接Gmail邮箱。">
+
+    
+    <link rel="alternative" href="/atom.xml" title="Tiny1024&#39;s Blog" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favorite32.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/apple114.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/apple114.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo128.png" alt="Tiny1024&#39;s Blog" title="Tiny1024&#39;s Blog"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Tiny1024&#39;s Blog">Tiny1024&#39;s Blog</a></h1>
+				<h2 class="blog-motto">A journey of a thousand miles begins with a single step.</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:www.tiny1024.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/09/17/ios-mailcore2-gmail-oauth2/" title="iOS MailCore2 Gmail OAuth2" itemprop="url">iOS MailCore2 Gmail OAuth2</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="tiny1024" target="_blank" itemprop="author">tiny1024</a>
+		
+  <p class="article-time">
+    <time datetime="2015-09-17T08:28:39.000Z" itemprop="datePublished"> 发表于 2015-09-17</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#MailCore2介绍"><span class="toc-number">1.</span> <span class="toc-text">MailCore2介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MailCore2_IMAP_简单使用"><span class="toc-number">2.</span> <span class="toc-text">MailCore2 IMAP 简单使用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#创建MCOIMAPSession"><span class="toc-number">2.1.</span> <span class="toc-text">创建MCOIMAPSession</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#检查账户"><span class="toc-number">2.2.</span> <span class="toc-text">检查账户</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#获取文件夹信息"><span class="toc-number">2.3.</span> <span class="toc-text">获取文件夹信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#获取邮件头列表"><span class="toc-number">2.4.</span> <span class="toc-text">获取邮件头列表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#获取邮件详细信息"><span class="toc-number">2.5.</span> <span class="toc-text">获取邮件详细信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#删除邮件"><span class="toc-number">2.6.</span> <span class="toc-text">删除邮件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#其他操作"><span class="toc-number">2.7.</span> <span class="toc-text">其他操作</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#OAuth2介绍"><span class="toc-number">3.</span> <span class="toc-text">OAuth2介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#OAuth2_Client_ID/Secret_申请"><span class="toc-number">4.</span> <span class="toc-text">OAuth2 Client ID/Secret 申请</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#集成OAuth2到iOS应用"><span class="toc-number">5.</span> <span class="toc-text">集成OAuth2到iOS应用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Add_OAuth2_Related_Files"><span class="toc-number">5.1.</span> <span class="toc-text">Add OAuth2 Related Files</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ARC_Compatibility"><span class="toc-number">5.2.</span> <span class="toc-text">ARC Compatibility</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#System_Requirements"><span class="toc-number">5.3.</span> <span class="toc-text">System Requirements</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Integrate_with_iOS_App"><span class="toc-number">5.4.</span> <span class="toc-text">Integrate with iOS App</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Patch_for_GTMSessionFetcher-m"><span class="toc-number">5.5.</span> <span class="toc-text">Patch for GTMSessionFetcher.m</span></a></li></ol></li></ol>
+		
+		</div>
+		
+		<p>本文简单介绍如何在iOS应用中使用mailcore2库，通过OAuth2认证连接Gmail邮箱。</p>
+<a id="more"></a>
+<h2 id="MailCore2介绍">MailCore2介绍</h2><p>Github: <a href="https://github.com/MailCore/mailcore2" target="_blank" rel="external">https://github.com/MailCore/mailcore2</a></p>
+<p>MailCore2提供一种简单、异步的Objective-C API，用于IMAP，POP或者SMTP协议登录邮箱。<br>主要功能有：</p>
+<ol>
+<li>支持POP，IMAP和SMTP电子邮件协议；</li>
+<li>RFC822解析和生成；</li>
+<li>异步获取邮件的API；</li>
+<li>可以使用HTML格式来显示邮件内容；</li>
+<li>支持iOS和Mac</li>
+</ol>
+<p>MailCore2 已经加入到 CocoaPods中，使用pod安装mailcore2-ios非常容易：</p>
+<p>创建Podfile，添加如下内容：<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="rule"><span class="attribute">platform </span>:<span class="value">ios, <span class="string">'8.0'</span></span><br><span class="line">pod <span class="string">'mailcore2-ios'</span>, <span class="string">'~&gt; 0.5.1'</span></span></span></span><br></pre></td></tr></table></figure></p>
+<p>然后执行<code>pod install</code>进行安装。</p>
+<h2 id="MailCore2_IMAP_简单使用">MailCore2 IMAP 简单使用</h2><h3 id="创建MCOIMAPSession">创建MCOIMAPSession</h3><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">getSession</span><span class="params">()</span></span> -&gt; <span class="type">MCOIMAPSession</span>? &#123;</span><br><span class="line">    <span class="comment">// Refer to OAuth2 section about how to get the token</span></span><br><span class="line">    <span class="keyword">let</span> authToken: <span class="type">String</span>? = <span class="literal">nil</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> session = <span class="type">MCOIMAPSession</span>()</span><br><span class="line">    session.hostname = <span class="string">"imap.gmail.com"</span></span><br><span class="line">    session.port = <span class="number">993</span></span><br><span class="line">    session.username = <span class="string">"xxx@gmail.com"</span></span><br><span class="line">    session.password = <span class="string">"xxx"</span></span><br><span class="line">    session.<span class="type">OAuth2Token</span> = authToken</span><br><span class="line">    session.connectionType = <span class="type">MCOConnectionType</span>.<span class="type">TLS</span></span><br><span class="line">    <span class="keyword">if</span> authToken == <span class="literal">nil</span> &#123;</span><br><span class="line">        session.authType = <span class="type">MCOAuthType</span>.<span class="type">SASLPlain</span></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        session.authType = <span class="type">MCOAuthType</span>.<span class="type">XOAuth2</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    session.connectionLogger = &#123; (connId, logType, rawData) <span class="keyword">in</span></span><br><span class="line">        <span class="keyword">let</span> data = <span class="type">NSString</span>(data: rawData, encoding: <span class="type">NSUTF8StringEncoding</span>)</span><br><span class="line">        <span class="built_in">println</span>(<span class="string">"connection id: <span class="subst">\(connId)</span>, log type: <span class="subst">\(logType)</span>, data: <span class="subst">\(data)</span>"</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> session</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="检查账户">检查账户</h3><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">checkAccount</span><span class="params">()</span></span> -&gt; <span class="type">Void</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">let</span> session = getSession() &#123;</span><br><span class="line">        <span class="keyword">let</span> checkOperation = session.checkAccountOperation()</span><br><span class="line">        checkOperation.start &#123; (error) -&gt; <span class="type">Void</span> <span class="keyword">in</span></span><br><span class="line">            <span class="keyword">if</span> error == <span class="literal">nil</span> &#123;</span><br><span class="line">                <span class="comment">// Succeeded</span></span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">// Failed</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="获取文件夹信息">获取文件夹信息</h3><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">checkFolder</span><span class="params">(folder: String)</span></span> -&gt; <span class="type">Void</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">let</span> session = getSession() &#123;</span><br><span class="line">        <span class="keyword">let</span> folderOperation = session.folderInfoOperation(folder)</span><br><span class="line">        folderOperation.start &#123; (error, folderInfo) -&gt; <span class="type">Void</span> <span class="keyword">in</span></span><br><span class="line">            <span class="keyword">if</span> error == <span class="literal">nil</span> &#123;</span><br><span class="line">                <span class="comment">// Succeeded</span></span><br><span class="line">                <span class="keyword">if</span> <span class="keyword">let</span> folderInfo <span class="keyword">as</span>? <span class="type">MCOIMAPFolderInfo</span> &#123;</span><br><span class="line"></span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">// Failed</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="获取邮件头列表">获取邮件头列表</h3><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">fetchMailList</span><span class="params">(folder: String)</span></span> -&gt; <span class="type">Void</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">let</span> session = getSession() &#123;</span><br><span class="line">        <span class="keyword">let</span> requestKind = <span class="type">MCOIMAPMessagesRequestKind</span>.<span class="type">Headers</span></span><br><span class="line">        <span class="keyword">let</span> uids = <span class="type">MCOIndexSet</span>(range: <span class="type">MCORange</span>(location: <span class="number">1</span>, length: <span class="type">UINT64_MAX</span>))</span><br><span class="line"></span><br><span class="line">        <span class="keyword">let</span> fetchOperation = session.fetchMessagesOperationWithFolder(folder, requestKind: requestKind, uids: uids)</span><br><span class="line"></span><br><span class="line">        fetchOperation.start &#123; (error, fetchedMessages, vanishedMessages) -&gt; <span class="type">Void</span> <span class="keyword">in</span></span><br><span class="line">            <span class="keyword">if</span> error == <span class="literal">nil</span> &#123;</span><br><span class="line">                <span class="comment">// Succeeded</span></span><br><span class="line">                <span class="keyword">if</span> <span class="keyword">let</span> messages = fetchedMessages <span class="keyword">as</span>? [<span class="type">MCOIMAPMessage</span>] &#123;</span><br><span class="line">                    <span class="comment">// process messages</span></span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">// Failed</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="获取邮件详细信息">获取邮件详细信息</h3><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Get the uid from MCOIMAPMessage:</span></span><br><span class="line"><span class="comment">// let message: MCOIMAPMessage = xxx</span></span><br><span class="line"><span class="comment">// let uid = message.uid</span></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">fetchMailByUid</span><span class="params">(uid: UInt32, folder: String)</span></span> -&gt; <span class="type">Void</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">let</span> session = getSession() &#123;</span><br><span class="line">        <span class="keyword">let</span> fetchOperation = session.fetchMessageOperationWithFolder(folder, uid: uid)</span><br><span class="line">        fetchOperation.start &#123; (error, data) -&gt; <span class="type">Void</span> <span class="keyword">in</span></span><br><span class="line">            <span class="keyword">if</span> error == <span class="literal">nil</span> &#123;</span><br><span class="line">                <span class="comment">// Succeeded</span></span><br><span class="line">                <span class="comment">// Render the mail to HTML</span></span><br><span class="line">                <span class="keyword">let</span> parser = <span class="type">MCOMessageParser</span>(data: data)</span><br><span class="line">                <span class="keyword">let</span> htmlBody = parser.htmlRenderingWithDelegate(<span class="literal">nil</span>)</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">// Failed</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="删除邮件">删除邮件</h3><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">deleteMailByUid</span><span class="params">(uid: UInt64, folder: String)</span></span> -&gt; <span class="type">Void</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">let</span> session = getSession() &#123;</span><br><span class="line">        <span class="keyword">let</span> storeFlagOperation = session.storeFlagsOperationWithFolder(folder,</span><br><span class="line">            uids: <span class="type">MCOIndexSet</span>(index: uid),</span><br><span class="line">            kind: <span class="type">MCOIMAPStoreFlagsRequestKind</span>.<span class="type">Set</span>,</span><br><span class="line">            flags: <span class="type">MCOMessageFlag</span>.<span class="type">Deleted</span>)</span><br><span class="line"></span><br><span class="line">        storeFlagOperation.start &#123;</span><br><span class="line">            (error) -&gt; <span class="type">Void</span> <span class="keyword">in</span></span><br><span class="line"></span><br><span class="line">            <span class="keyword">var</span> deletedFlagStored = <span class="literal">false</span></span><br><span class="line">            <span class="keyword">if</span> error == <span class="literal">nil</span> &#123;</span><br><span class="line">                deletedFlagStored = <span class="literal">true</span></span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> deletedFlagStored &#123;</span><br><span class="line">                <span class="keyword">let</span> deleteOp = session.expungeOperation(folder)</span><br><span class="line">                deleteOp.start&#123; (deleteError) -&gt; <span class="type">Void</span> <span class="keyword">in</span></span><br><span class="line">                    <span class="comment">// Check the deletion error</span></span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="其他操作">其他操作</h3><p>参见MailCore2参考文档：<a href="http://libmailcore.com/mailcore2/api/index.html" target="_blank" rel="external">http://libmailcore.com/mailcore2/api/index.html</a></p>
+<h2 id="OAuth2介绍">OAuth2介绍</h2><p>OAuth 2.0 Mechanism:<br><a href="https://developers.google.com/gmail/xoauth2_protocol?hl=en" target="_blank" rel="external">https://developers.google.com/gmail/xoauth2_protocol?hl=en</a><br>Using OAuth 2.0 to Access Google APIs:<br><a href="https://developers.google.com/identity/protocols/OAuth2" target="_blank" rel="external">https://developers.google.com/identity/protocols/OAuth2</a><br>Using the OAuth 2 Controllers:<br><a href="https://github.com/google/gtm-oauth2/wiki" target="_blank" rel="external">https://github.com/google/gtm-oauth2/wiki</a></p>
+<h2 id="OAuth2_Client_ID/Secret_申请">OAuth2 Client ID/Secret 申请</h2><ol>
+<li>Login google developers console <a href="https://console.developers.google.com/" target="_blank" rel="external">https://console.developers.google.com/</a></li>
+<li>Create a new project, such as NiftyProject.</li>
+<li>Select “APIs &amp; auth” -&gt; “APIs”, add “Gmail API” to “Enabled APIs”</li>
+<li>Select “APIs &amp; auth” -&gt; “Credentials” -&gt; “Add credentials” -&gt; “OAuth 2.0 client ID”.<br>Configure the consent screen if prompted, set the product name, such as NiftyDemo, then save the OAuth consent screen.<br>Then select “Add credentials” -&gt; “OAuth 2.0 client ID”, and set the Application type to “Other” (NOT iOS), click “Create” and input the Name(such as NiftyDemo) to finish.</li>
+<li>Get the client ID and secret from the popup window.</li>
+</ol>
+<h2 id="集成OAuth2到iOS应用">集成OAuth2到iOS应用</h2><p>This section refers to <a href="https://github.com/google/gtm-oauth2/wiki" target="_blank" rel="external">https://github.com/google/gtm-oauth2/wiki</a></p>
+<h3 id="Add_OAuth2_Related_Files">Add OAuth2 Related Files</h3><p>The project has targets for building a static library for iOS and a framework for Mac OS X. Alternatively, the source files and xibs may be dragged directly into your project file and compiled with your application.</p>
+<p>The source files required are:</p>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Repos Name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GTMOAuth2Authentication.h/m</td>
+<td>gtm-oauth2</td>
+</tr>
+<tr>
+<td>GTMOAuth2SignIn.h/m</td>
+<td>gtm-oauth2</td>
+</tr>
+<tr>
+<td>GTMHTTPFetcher.h/m</td>
+<td>gtm-http-fetcher</td>
+</tr>
+<tr>
+<td>GTMSessionFetcher.h/m</td>
+<td>gtm-session-fetcher</td>
+</tr>
+<tr>
+<td>GTMOAuth2ViewControllerTouch.h/m</td>
+<td>gtm-oauth2</td>
+</tr>
+<tr>
+<td>GTMOAuth2ViewTouch.xib</td>
+<td>gtm-oauth2</td>
+</tr>
+</tbody>
+</table>
+<p>The github repos:</p>
+<table>
+<thead>
+<tr>
+<th>Repos Name</th>
+<th>Repos Link</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>gtm-oauth2</td>
+<td><a href="https://github.com/google/gtm-oauth2" target="_blank" rel="external">https://github.com/google/gtm-oauth2</a></td>
+</tr>
+<tr>
+<td>gtm-http-fetcher</td>
+<td><a href="https://github.com/google/gtm-http-fetcher" target="_blank" rel="external">https://github.com/google/gtm-http-fetcher</a></td>
+</tr>
+<tr>
+<td>gtm-session-fetcher</td>
+<td><a href="https://github.com/google/gtm-session-fetcher" target="_blank" rel="external">https://github.com/google/gtm-session-fetcher</a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="ARC_Compatibility">ARC Compatibility</h3><p>When the controller source files are compiled directly into a project that has ARC enabled, then ARC must be disabled specifically for the controller source files.</p>
+<p>To disable ARC for source files in Xcode 4, select the project and the target in Xcode. Under the target “Build Phases” tab, expand the Compile Sources build phase, select the library source files, then press Enter to open an edit field, and type -fno-objc-arc as the compiler flag for those files.</p>
+<h3 id="System_Requirements">System Requirements</h3><p>The Mac controller is compatible with Mac OS X 10.5 and later. The iOS controller is compatible with iPhone OS 3 and later.</p>
+<p>The sample applications use Objective-C blocks, so are intended for iOS 4 and Mac OS X 10.6.</p>
+<h3 id="Integrate_with_iOS_App">Integrate with iOS App</h3><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> scope = <span class="string">"https://mail.google.com/"</span></span><br><span class="line"><span class="keyword">let</span> keychainItemName = <span class="string">"My OAuth2: Gmail"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> clientID = <span class="string">"xxx"</span>        <span class="comment">// Get from above steps</span></span><br><span class="line"><span class="keyword">let</span> clientSecret = <span class="string">"xxx"</span>    <span class="comment">// Get from above steps</span></span><br><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">startOAuth2</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">let</span> viewController: <span class="type">GTMOAuth2ViewControllerTouch</span></span><br><span class="line">    viewController = <span class="type">GTMOAuth2ViewControllerTouch</span>(</span><br><span class="line">        scope: scope,</span><br><span class="line">        clientID: clientID,</span><br><span class="line">        clientSecret: clientSecret,</span><br><span class="line">        keychainItemName: keychainItemName,</span><br><span class="line">        delegate: <span class="keyword">self</span>,</span><br><span class="line">        finishedSelector: <span class="string">"viewController:finishedWithAuth:error:"</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">self</span>.navigationController?.pushViewController(viewController, animated: <span class="literal">true</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Delegate method for OAuth2</span></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">viewController</span><span class="params">(viewController: GTMOAuth2ViewControllerTouch!, finishedWithAuth auth: GTMOAuth2Authentication!, error: NSError!)</span></span> &#123;</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">let</span> authError = error &#123;</span><br><span class="line">        <span class="comment">// Failed</span></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// Succeeded</span></span><br><span class="line">        <span class="keyword">let</span> loginName = auth.userEmail</span><br><span class="line">        <span class="keyword">let</span> accessToken = auth.accessToken</span><br><span class="line">        <span class="comment">// Use the accessToken to get MCOIMAPSession</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Patch_for_GTMSessionFetcher-m">Patch for GTMSessionFetcher.m</h3><p>After upgrade Xcode from 6.4 to 7.0, there is a build issue for GTMSessionFetcher.m.<br>Please use the following patch:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">- (void)getCookiesForTask:(<span class="type">NSURLSessionTask</span> *)task</span><br><span class="line">-        completionHandler:(void (^)(<span class="type">NSArray</span> *))completionHandler &#123;</span><br><span class="line">+        completionHandler:(void (^)(<span class="type">NSArray</span>&lt;<span class="type">NSHTTPCookie</span> *&gt; *))completionHandler &#123;</span><br><span class="line">  <span class="keyword">if</span> (completionHandler) &#123;</span><br><span class="line">    <span class="type">NSURLRequest</span> *currentRequest = task.currentRequest;</span><br><span class="line">    <span class="type">NSArray</span> *cookies = [<span class="keyword">self</span> cookiesForURL:currentRequest.<span class="type">URL</span>];</span><br></pre></td></tr></table></figure>
+<p>More info, please refer to <a href="https://github.com/google/google-api-objectivec-client/issues/93" target="_blank" rel="external">https://github.com/google/google-api-objectivec-client/issues/93</a></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/iOS/">iOS</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Gmail/">Gmail</a><a href="/tags/MailCore2/">MailCore2</a><a href="/tags/OAuth2/">OAuth2</a><a href="/tags/iOS/">iOS</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://www.tiny1024.com/2015/09/17/ios-mailcore2-gmail-oauth2/" data-title="iOS MailCore2 Gmail OAuth2 | Tiny1024&#39;s Blog" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2015/09/18/swift-assert-and-precondition/" title="Swift Assert and Precondition">
+  <strong>上一篇：</strong><br/>
+  <span>
+  Swift Assert and Precondition</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2015/07/16/ios-in-app-purchase/"  title="In-App Purchase">
+ <strong>下一篇：</strong><br/> 
+ <span>In-App Purchase
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#MailCore2介绍"><span class="toc-number">1.</span> <span class="toc-text">MailCore2介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MailCore2_IMAP_简单使用"><span class="toc-number">2.</span> <span class="toc-text">MailCore2 IMAP 简单使用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#创建MCOIMAPSession"><span class="toc-number">2.1.</span> <span class="toc-text">创建MCOIMAPSession</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#检查账户"><span class="toc-number">2.2.</span> <span class="toc-text">检查账户</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#获取文件夹信息"><span class="toc-number">2.3.</span> <span class="toc-text">获取文件夹信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#获取邮件头列表"><span class="toc-number">2.4.</span> <span class="toc-text">获取邮件头列表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#获取邮件详细信息"><span class="toc-number">2.5.</span> <span class="toc-text">获取邮件详细信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#删除邮件"><span class="toc-number">2.6.</span> <span class="toc-text">删除邮件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#其他操作"><span class="toc-number">2.7.</span> <span class="toc-text">其他操作</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#OAuth2介绍"><span class="toc-number">3.</span> <span class="toc-text">OAuth2介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#OAuth2_Client_ID/Secret_申请"><span class="toc-number">4.</span> <span class="toc-text">OAuth2 Client ID/Secret 申请</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#集成OAuth2到iOS应用"><span class="toc-number">5.</span> <span class="toc-text">集成OAuth2到iOS应用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Add_OAuth2_Related_Files"><span class="toc-number">5.1.</span> <span class="toc-text">Add OAuth2 Related Files</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ARC_Compatibility"><span class="toc-number">5.2.</span> <span class="toc-text">ARC Compatibility</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#System_Requirements"><span class="toc-number">5.3.</span> <span class="toc-text">System Requirements</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Integrate_with_iOS_App"><span class="toc-number">5.4.</span> <span class="toc-text">Integrate with iOS App</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Patch_for_GTMSessionFetcher-m"><span class="toc-number">5.5.</span> <span class="toc-text">Patch for GTMSessionFetcher.m</span></a></li></ol></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/C-C/" title="C/C++">C/C++<sup>3</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Linux-UNIX/" title="Linux/UNIX">Linux/UNIX<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Mac/" title="Mac">Mac<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Swift/" title="Swift">Swift<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/iOS/" title="iOS">iOS<sup>6</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/iOS/" title="iOS">iOS<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/C/" title="C">C<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Swift/" title="Swift">Swift<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/plist/" title="plist">plist<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/AnyGenerator/" title="AnyGenerator">AnyGenerator<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Objective-C/" title="Objective-C">Objective-C<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Apache/" title="Apache">Apache<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Mac/" title="Mac">Mac<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Assert/" title="Assert">Assert<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Precondition/" title="Precondition">Precondition<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Password-Window/" title="Password Window">Password Window<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/MailCore2/" title="MailCore2">MailCore2<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Gmail/" title="Gmail">Gmail<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/OAuth2/" title="OAuth2">OAuth2<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/In-App-Purchase/" title="In-App Purchase">In-App Purchase<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/动态下载字体/" title="动态下载字体">动态下载字体<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Ubuntu/" title="Ubuntu">Ubuntu<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://coolshell.cn" target="_blank" title="Cool Shell">Cool Shell</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://macshuo.com" target="_blank" title="Mac Talk">Mac Talk</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello, I&#39;m tiny1024. I&#39;m a developer. <br/>
+			This is my blog, nice to meet you.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		<a href="mailto:iqujingwei@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2015 
+		
+		<a href="/about" target="_blank" title="tiny1024">tiny1024</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+        getSize();
+        if (myWidth >= 1024) {
+          c.click();
+        }
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
