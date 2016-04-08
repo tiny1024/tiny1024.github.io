@@ -17,7 +17,7 @@
 <meta property="og:url" content="http://www.tiny1024.com/2015/07/10/c-signed-unsigned/index.html">
 <meta property="og:site_name" content="Tiny1024's Blog">
 <meta property="og:description" content="本文分析两个由于signed和unsigned导致的溢出的问题。">
-<meta property="og:updated_time" content="2015-09-17T07:20:06.000Z">
+<meta property="og:updated_time" content="2015-11-06T03:58:27.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="C语言中signed和unsigned导致的溢出">
 <meta name="twitter:description" content="本文分析两个由于signed和unsigned导致的溢出的问题。">
@@ -32,7 +32,7 @@
     <link rel="apple-touch-icon" href="/img/apple114.jpg">
     <link rel="apple-touch-icon-precomposed" href="/img/apple114.jpg">
     
-    <link rel="stylesheet" href="/css/style.css" type="text/css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 
   <body>
@@ -102,9 +102,9 @@
 		
 		<p>本文分析两个由于signed和unsigned导致的溢出的问题。</p>
 <a id="more"></a>
-<h2 id="问题1">问题1</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span><span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">foo</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">int</span> a = <span class="number">6</span>;</span><br><span class="line">  <span class="keyword">int</span> b = -<span class="number">20</span>;</span><br><span class="line">  (a + b &gt; <span class="number">6</span>) ? <span class="built_in">printf</span>(<span class="string">"&gt;6\n"</span>) : <span class="built_in">printf</span>(<span class="string">"&lt;=6\n"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  foo();</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="问题1"><a href="#问题1" class="headerlink" title="问题1"></a>问题1</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">foo</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">int</span> a = <span class="number">6</span>;</span><br><span class="line">  <span class="keyword">int</span> b = <span class="number">-20</span>;</span><br><span class="line">  (a + b &gt; <span class="number">6</span>) ? <span class="built_in">printf</span>(<span class="string">"&gt;6\n"</span>) : <span class="built_in">printf</span>(<span class="string">"&lt;=6\n"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  foo();</span><br><span class="line">  return <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>结果：&gt;6<br>分析：a+b这里做了隐式的转换，把int转化为unsigned int。编译器就会把b当作一个很大的正数。</p>
-<h2 id="问题2">问题2</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span><span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span><span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">bar</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">signed</span> <span class="keyword">char</span> a[<span class="number">1000</span>];</span><br><span class="line">  <span class="keyword">int</span> i;</span><br><span class="line">  <span class="keyword">for</span>(i = <span class="number">0</span>; i &lt; <span class="number">1000</span>; i++) &#123;</span><br><span class="line">    a[i] = -<span class="number">1</span> - i;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"%d\n"</span>, (<span class="keyword">int</span>)<span class="built_in">strlen</span>(a));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  bar();</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="问题2"><a href="#问题2" class="headerlink" title="问题2"></a>问题2</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">bar</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">signed</span> <span class="keyword">char</span> a[<span class="number">1000</span>];</span><br><span class="line">  <span class="keyword">int</span> i;</span><br><span class="line">  <span class="keyword">for</span>(i = <span class="number">0</span>; i &lt; <span class="number">1000</span>; i++) &#123;</span><br><span class="line">    a[i] = <span class="number">-1</span> - i;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"%d\n"</span>, (int)<span class="built_in">strlen</span>(a));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  bar();</span><br><span class="line">  return <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>结果：255<br>分析：在计算机中数值使用补码来进行表示。signed char类型表示值的范围是[-128, 127]。<br>当i=0时，a[0]=-1，补码为0xFF；<br>当i=1时，a[1]=-2，补码为0xFE；<br>……<br>当i=127时，a[127]=-128，补码为0x80，而-128是char类型所能表示的最小的负数。<br>当i=128时，a[128]=127(-129)，但是这时候发生了溢出，-129需要9位才能保存下来，而char类型数据只有8位，所以最高位被丢弃。剩下的8位是原来9位补码的低8位的值，故补码的值为0x7F，(-129)=(1 1000 0001)原码=(1 0111 1111)补码；<br>……<br>当i=255时，a[255]=0(-256)，补码为0x00，(-256)=(11 0000 0000)原码=(11 0000 0000)补码；<br>当i=256时，a[256]=-1(-257)，补码为0xFF;<br>……<br>按照上面的分析，a[0]到a[254]里面的值都不为0，而a[255]里的值为0。strlen函数是计算字符串长度的，并不包含字符串最后的’\0’。判断一个字符串是否结束的标志就是看是否遇到’\0’；如果遇到，则认为本字符串结束。</p>
   
 	</div>
@@ -113,13 +113,13 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/C-C/">C/C++</a>
+  <a class="article-category-link" href="/categories/C-C-语言/">C/C++语言</a>
 </div>
 
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/C/">C</a>
+  <span></span> <a href="/tags/C-C/">C/C++</a>
   </div>
 
 </div>
@@ -182,27 +182,27 @@
 		<ul>
 		
 		  
-			<li><a href="/categories/C-C/" title="C/C++">C/C++<sup>3</sup></a></li>
+			<li><a href="/categories/C-C-语言/" title="C/C++语言">C/C++语言<sup>3</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/Linux/" title="Linux">Linux<sup>1</sup></a></li>
+			<li><a href="/categories/Unix-Linux/" title="Unix/Linux">Unix/Linux<sup>2</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/Linux-UNIX/" title="Linux/UNIX">Linux/UNIX<sup>1</sup></a></li>
+			<li><a href="/categories/Web开发/" title="Web开发">Web开发<sup>1</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/Mac/" title="Mac">Mac<sup>1</sup></a></li>
+			<li><a href="/categories/iOS开发/" title="iOS开发">iOS开发<sup>9</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/Swift/" title="Swift">Swift<sup>2</sup></a></li>
+			<li><a href="/categories/其他/" title="其他">其他<sup>1</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/iOS/" title="iOS">iOS<sup>6</sup></a></li>
+			<li><a href="/categories/操作系统/" title="操作系统">操作系统<sup>2</sup></a></li>
 		  
 		
 		</ul>
@@ -215,63 +215,23 @@
 		<ul class="clearfix">
 		
 			
-				<li><a href="/tags/C/" title="C">C<sup>3</sup></a></li>
+				<li><a href="/tags/iOS/" title="iOS">iOS<sup>6</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/iOS/" title="iOS">iOS<sup>3</sup></a></li>
+				<li><a href="/tags/C-C/" title="C/C++">C/C++<sup>3</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/Swift/" title="Swift">Swift<sup>2</sup></a></li>
+				<li><a href="/tags/Swift/" title="Swift">Swift<sup>3</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/Precondition/" title="Precondition">Precondition<sup>1</sup></a></li>
+				<li><a href="/tags/Tomcat/" title="Tomcat">Tomcat<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/AnyGenerator/" title="AnyGenerator">AnyGenerator<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Objective-C/" title="Objective-C">Objective-C<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Apache/" title="Apache">Apache<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Mac/" title="Mac">Mac<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Linux/" title="Linux">Linux<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Ubuntu/" title="Ubuntu">Ubuntu<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Assert/" title="Assert">Assert<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/plist/" title="plist">plist<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Password-Window/" title="Password Window">Password Window<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/MailCore2/" title="MailCore2">MailCore2<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Gmail/" title="Gmail">Gmail<sup>1</sup></a></li>
+				<li><a href="/tags/工具/" title="工具">工具<sup>1</sup></a></li>
 			
 		
 			
@@ -279,15 +239,15 @@
 			
 		
 			
-				<li><a href="/tags/In-App-Purchase/" title="In-App Purchase">In-App Purchase<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/动态下载字体/" title="动态下载字体">动态下载字体<sup>1</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/mailx/" title="mailx">mailx<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Apache/" title="Apache">Apache<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/ubuntu/" title="ubuntu">ubuntu<sup>1</sup></a></li>
 			
 		
 		</ul>
@@ -351,7 +311,7 @@
 		
 
 		<p class="copyright">
-		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2015 
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
 		
 		<a href="/about" target="_blank" title="tiny1024">tiny1024</a>
 		

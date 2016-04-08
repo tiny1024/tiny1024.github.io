@@ -17,7 +17,7 @@
 <meta property="og:url" content="http://www.tiny1024.com/2015/07/10/objc-sort-array/index.html">
 <meta property="og:site_name" content="Tiny1024's Blog">
 <meta property="og:description" content="本文介绍如何在Objective-C中使用NSComparator, NSSortDescriptor和selector进行排序。">
-<meta property="og:updated_time" content="2015-09-17T07:48:39.000Z">
+<meta property="og:updated_time" content="2015-11-06T04:02:54.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="对NSArray中自定义对象进行排序">
 <meta name="twitter:description" content="本文介绍如何在Objective-C中使用NSComparator, NSSortDescriptor和selector进行排序。">
@@ -32,7 +32,7 @@
     <link rel="apple-touch-icon" href="/img/apple114.jpg">
     <link rel="apple-touch-icon-precomposed" href="/img/apple114.jpg">
     
-    <link rel="stylesheet" href="/css/style.css" type="text/css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 
   <body>
@@ -102,18 +102,18 @@
 		
 		<p>本文介绍如何在Objective-C中使用NSComparator, NSSortDescriptor和selector进行排序。</p>
 <a id="more"></a>
-<h2 id="准备">准备</h2><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Person</span> : <span class="title">NSObject</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">strong</span>) <span class="built_in">NSString</span> *name;</span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">strong</span>) <span class="built_in">NSString</span> *nationality;</span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">strong</span>) <span class="built_in">NSDate</span> *birthday;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
-<h2 id="使用NSComparator进行排序">使用NSComparator进行排序</h2><p>NSComparator使用block对象作比较操作：<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="built_in">NSComparisonResult</span> (^<span class="built_in">NSComparator</span>)(<span class="keyword">id</span> obj1, <span class="keyword">id</span> obj2);</span><br></pre></td></tr></table></figure></p>
+<h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Person</span> : <span class="title">NSObject</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">strong</span>) <span class="built_in">NSString</span> *name;</span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">strong</span>) <span class="built_in">NSString</span> *nationality;</span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">strong</span>) <span class="built_in">NSDate</span> *birthday;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<h2 id="使用NSComparator进行排序"><a href="#使用NSComparator进行排序" class="headerlink" title="使用NSComparator进行排序"></a>使用NSComparator进行排序</h2><p>NSComparator使用block对象作比较操作：<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="built_in">NSComparisonResult</span> (^<span class="built_in">NSComparator</span>)(<span class="keyword">id</span> obj1, <span class="keyword">id</span> obj2);</span><br></pre></td></tr></table></figure></p>
 <p>参数(obj1和obj2)就是我们将要做比较的对象。block返回的结果为NSComparisonResult类型来表示两个对象的顺序。</p>
-<p>NSComparisonResult的定义如下：<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enum</span> &#123;</span><br><span class="line">   <span class="built_in">NSOrderedAscending</span> = -<span class="number">1</span>,</span><br><span class="line">   <span class="built_in">NSOrderedSame</span>,</span><br><span class="line">   <span class="built_in">NSOrderedDescending</span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">typedef</span> <span class="built_in">NSInteger</span> <span class="built_in">NSComparisonResult</span>;</span><br></pre></td></tr></table></figure></p>
+<p>NSComparisonResult的定义如下：<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enum</span> &#123;</span><br><span class="line">   <span class="built_in">NSOrderedAscending</span> = <span class="number">-1</span>,</span><br><span class="line">   <span class="built_in">NSOrderedSame</span>,</span><br><span class="line">   <span class="built_in">NSOrderedDescending</span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">typedef</span> <span class="built_in">NSInteger</span> <span class="built_in">NSComparisonResult</span>;</span><br></pre></td></tr></table></figure></p>
 <p>要对整个数组做排序，则需要使用NSArray的sortArrayUsingComparator:方法：</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSArray</span> *sortedArray = [<span class="keyword">self</span><span class="variable">.persons</span> sortedArrayUsingComparator:^<span class="built_in">NSComparisonResult</span>(Person *obj1, Person *obj2) &#123;</span><br><span class="line">    <span class="keyword">return</span> [obj1<span class="variable">.name</span> compare:obj2<span class="variable">.name</span>];</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure>
-<h2 id="使用NSSortDescriptor进行排序">使用NSSortDescriptor进行排序</h2><p>NSSortDescriptor不仅可以用来对数组进行排序，还能指定item在Table View中的排序，以及Core Data中对Fetch Request返回的数据做排序处理。通过Sort Descriptor可以很方便的对数组进行多个key的排序。</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSArray</span> *sortedArray = [<span class="keyword">self</span>.persons sortedArrayUsingComparator:^<span class="built_in">NSComparisonResult</span>(Person *obj1, Person *obj2) &#123;</span><br><span class="line">    <span class="keyword">return</span> [obj1.name compare:obj2.name];</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure>
+<h2 id="使用NSSortDescriptor进行排序"><a href="#使用NSSortDescriptor进行排序" class="headerlink" title="使用NSSortDescriptor进行排序"></a>使用NSSortDescriptor进行排序</h2><p>NSSortDescriptor不仅可以用来对数组进行排序，还能指定item在Table View中的排序，以及Core Data中对Fetch Request返回的数据做排序处理。通过Sort Descriptor可以很方便的对数组进行多个key的排序。</p>
 <p>下面来看看如何对我们的数组做name排序，然后在进行nationality排序：</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSSortDescriptor</span> *first = [[<span class="built_in">NSSortDescriptor</span> alloc] initWithKey:<span class="string">@"name"</span> ascending:<span class="literal">YES</span>];</span><br><span class="line"><span class="built_in">NSSortDescriptor</span> *second = [[<span class="built_in">NSSortDescriptor</span> alloc] initWithKey:<span class="string">@"nationality"</span> ascending:<span class="literal">YES</span>];</span><br><span class="line"><span class="built_in">NSArray</span> *sortDescriptors = [<span class="built_in">NSArray</span> arrayWithObjects:first, second, <span class="literal">nil</span>];</span><br><span class="line"><span class="built_in">NSArray</span> *sortedArray = [<span class="keyword">self</span><span class="variable">.persons</span> sortedArrayUsingDescriptors:sortDescriptors];</span><br></pre></td></tr></table></figure>
-<h2 id="使用selector进行排序">使用selector进行排序</h2><p>下面的方法需要定义在Person类中，用来对Person的生日进行排序：</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="built_in">NSComparisonResult</span>)compare:(Person *)otherPerson &#123;</span><br><span class="line">    <span class="keyword">return</span> [<span class="keyword">self</span><span class="variable">.birthday</span> compare:otherPerson<span class="variable">.birthday</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>要对数组用selector做排序，需要使用NSArray的sortedArrayUsingSelector:方法：<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSArray</span> *sortedArray = [<span class="keyword">self</span><span class="variable">.persons</span> sortedArrayUsingSelector:<span class="keyword">@selector</span>(compare:)];</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSSortDescriptor</span> *first = [[<span class="built_in">NSSortDescriptor</span> alloc] initWithKey:<span class="string">@"name"</span> ascending:<span class="literal">YES</span>];</span><br><span class="line"><span class="built_in">NSSortDescriptor</span> *second = [[<span class="built_in">NSSortDescriptor</span> alloc] initWithKey:<span class="string">@"nationality"</span> ascending:<span class="literal">YES</span>];</span><br><span class="line"><span class="built_in">NSArray</span> *sortDescriptors = [<span class="built_in">NSArray</span> arrayWithObjects:first, second, <span class="literal">nil</span>];</span><br><span class="line"><span class="built_in">NSArray</span> *sortedArray = [<span class="keyword">self</span>.persons sortedArrayUsingDescriptors:sortDescriptors];</span><br></pre></td></tr></table></figure>
+<h2 id="使用selector进行排序"><a href="#使用selector进行排序" class="headerlink" title="使用selector进行排序"></a>使用selector进行排序</h2><p>下面的方法需要定义在Person类中，用来对Person的生日进行排序：</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="built_in">NSComparisonResult</span>)compare:(Person *)otherPerson &#123;</span><br><span class="line">    <span class="keyword">return</span> [<span class="keyword">self</span>.birthday compare:otherPerson.birthday];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>要对数组用selector做排序，需要使用NSArray的sortedArrayUsingSelector:方法：<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSArray</span> *sortedArray = [<span class="keyword">self</span>.persons sortedArrayUsingSelector:<span class="keyword">@selector</span>(compare:)];</span><br></pre></td></tr></table></figure></p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -121,13 +121,13 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/iOS/">iOS</a>
+  <a class="article-category-link" href="/categories/iOS开发/">iOS开发</a>
 </div>
 
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/Objective-C/">Objective-C</a>
+  <span></span> <a href="/tags/iOS/">iOS</a>
   </div>
 
 </div>
@@ -190,27 +190,27 @@
 		<ul>
 		
 		  
-			<li><a href="/categories/C-C/" title="C/C++">C/C++<sup>3</sup></a></li>
+			<li><a href="/categories/C-C-语言/" title="C/C++语言">C/C++语言<sup>3</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/Linux/" title="Linux">Linux<sup>1</sup></a></li>
+			<li><a href="/categories/Unix-Linux/" title="Unix/Linux">Unix/Linux<sup>2</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/Linux-UNIX/" title="Linux/UNIX">Linux/UNIX<sup>1</sup></a></li>
+			<li><a href="/categories/Web开发/" title="Web开发">Web开发<sup>1</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/Mac/" title="Mac">Mac<sup>1</sup></a></li>
+			<li><a href="/categories/iOS开发/" title="iOS开发">iOS开发<sup>9</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/Swift/" title="Swift">Swift<sup>2</sup></a></li>
+			<li><a href="/categories/其他/" title="其他">其他<sup>1</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/iOS/" title="iOS">iOS<sup>6</sup></a></li>
+			<li><a href="/categories/操作系统/" title="操作系统">操作系统<sup>2</sup></a></li>
 		  
 		
 		</ul>
@@ -223,63 +223,23 @@
 		<ul class="clearfix">
 		
 			
-				<li><a href="/tags/C/" title="C">C<sup>3</sup></a></li>
+				<li><a href="/tags/iOS/" title="iOS">iOS<sup>6</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/iOS/" title="iOS">iOS<sup>3</sup></a></li>
+				<li><a href="/tags/C-C/" title="C/C++">C/C++<sup>3</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/Swift/" title="Swift">Swift<sup>2</sup></a></li>
+				<li><a href="/tags/Swift/" title="Swift">Swift<sup>3</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/Precondition/" title="Precondition">Precondition<sup>1</sup></a></li>
+				<li><a href="/tags/Tomcat/" title="Tomcat">Tomcat<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/AnyGenerator/" title="AnyGenerator">AnyGenerator<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Objective-C/" title="Objective-C">Objective-C<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Apache/" title="Apache">Apache<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Mac/" title="Mac">Mac<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Linux/" title="Linux">Linux<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Ubuntu/" title="Ubuntu">Ubuntu<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Assert/" title="Assert">Assert<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/plist/" title="plist">plist<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Password-Window/" title="Password Window">Password Window<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/MailCore2/" title="MailCore2">MailCore2<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Gmail/" title="Gmail">Gmail<sup>1</sup></a></li>
+				<li><a href="/tags/工具/" title="工具">工具<sup>1</sup></a></li>
 			
 		
 			
@@ -287,15 +247,15 @@
 			
 		
 			
-				<li><a href="/tags/In-App-Purchase/" title="In-App Purchase">In-App Purchase<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/动态下载字体/" title="动态下载字体">动态下载字体<sup>1</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/mailx/" title="mailx">mailx<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Apache/" title="Apache">Apache<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/ubuntu/" title="ubuntu">ubuntu<sup>1</sup></a></li>
 			
 		
 		</ul>
@@ -359,7 +319,7 @@
 		
 
 		<p class="copyright">
-		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2015 
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
 		
 		<a href="/about" target="_blank" title="tiny1024">tiny1024</a>
 		

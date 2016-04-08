@@ -17,7 +17,7 @@
 <meta property="og:url" content="http://www.tiny1024.com/2015/09/18/swift-assert-and-precondition/index.html">
 <meta property="og:site_name" content="Tiny1024's Blog">
 <meta property="og:description" content="The difference between assert and precondition in swift.">
-<meta property="og:updated_time" content="2015-09-18T10:16:54.000Z">
+<meta property="og:updated_time" content="2015-11-06T04:03:26.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Swift Assert and Precondition">
 <meta name="twitter:description" content="The difference between assert and precondition in swift.">
@@ -32,7 +32,7 @@
     <link rel="apple-touch-icon" href="/img/apple114.jpg">
     <link rel="apple-touch-icon-precomposed" href="/img/apple114.jpg">
     
-    <link rel="stylesheet" href="/css/style.css" type="text/css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 
   <body>
@@ -96,25 +96,25 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Difference"><span class="toc-number">1.</span> <span class="toc-text">Difference</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Assert_Documentation"><span class="toc-number">2.</span> <span class="toc-text">Assert Documentation</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Precondition_Documentation"><span class="toc-number">3.</span> <span class="toc-text">Precondition Documentation</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Difference"><span class="toc-number">1.</span> <span class="toc-text">Difference</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Assert-Documentation"><span class="toc-number">2.</span> <span class="toc-text">Assert Documentation</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Precondition-Documentation"><span class="toc-number">3.</span> <span class="toc-text">Precondition Documentation</span></a></li></ol>
 		
 		</div>
 		
 		<p>The difference between assert and precondition in swift.</p>
 <a id="more"></a>
-<h2 id="Difference">Difference</h2><p>Both assertions and preconditions are used when you want to check a condition to be true before continuing execution. If the condition fails then execution is halted and the app crashes.</p>
+<h2 id="Difference"><a href="#Difference" class="headerlink" title="Difference"></a>Difference</h2><p>Both assertions and preconditions are used when you want to check a condition to be true before continuing execution. If the condition fails then execution is halted and the app crashes.</p>
 <p>The difference between the two is that assertions are compiled out in release builds, whereas preconditions are not. Assertions are designed to catch bugs during development, whereas preconditions are designed to throw fatal errors when a condition that must be true, is not.</p>
 <p>An example use of an assertion would be where you have methods that set up your view hierarchy in a view controller. If one method relies on another being executed already, then you would assert that. Like so:</p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">private <span class="func"><span class="keyword">func</span> <span class="title">configureTableView</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">self</span>.tableView = <span class="type">UITableView</span>(frame: <span class="type">CGRectZero</span>)</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="keyword">self</span>.view.addSubview(<span class="keyword">self</span>.tableView)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">private <span class="func"><span class="keyword">func</span> <span class="title">configureHeader</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="built_in">assert</span>(<span class="keyword">self</span>.tableView != <span class="literal">nil</span>)</span><br><span class="line">    <span class="keyword">let</span> headerView = <span class="type">UIView</span>(frame: <span class="type">CGRectMake</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">320</span>, <span class="number">50</span>))</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="keyword">self</span>.tableView.tableHeaderView = headerView</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">func</span> <span class="title">configureTableView</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">self</span>.tableView = <span class="type">UITableView</span>(frame: <span class="type">CGRectZero</span>)</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="keyword">self</span>.view.addSubview(<span class="keyword">self</span>.tableView)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">func</span> <span class="title">configureHeader</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="built_in">assert</span>(<span class="keyword">self</span>.tableView != <span class="literal">nil</span>)</span><br><span class="line">    <span class="keyword">let</span> headerView = <span class="type">UIView</span>(frame: <span class="type">CGRectMake</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">320</span>, <span class="number">50</span>))</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="keyword">self</span>.tableView.tableHeaderView = headerView</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>In this case, the configureHeader() method requires the table view to have been created, so an assertion that it exists is added before the header for the table view is set up. This would guard against calling these methods in the wrong order during view controller initialization.</p>
 <p>This is something that you’re going to catch during development. Instead of cursing your computer wondering why the header isn’t showing up, you’ll be notified of the mistake by the debugger stopping at the assert. There would be no need for this check in release builds because you should catch it during development.</p>
 <p>As stated above, preconditions do the same thing as assertions, but are also present in release builds. You might use them when you really do need to ensure that a condition is met. An example of this might be you are going to read into an array and you want to check that the index you’ve been given is valid. For example:</p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">fetchPeopleBetweenIndexes</span><span class="params">(start: Int, end: Int)</span></span> -&gt; [<span class="type">Person</span>] &#123;</span><br><span class="line">    precondition(start &lt; end)</span><br><span class="line">    precondition(start &gt;= <span class="number">0</span>)</span><br><span class="line">    precondition(end &lt;= <span class="keyword">self</span>.people.<span class="built_in">count</span>)</span><br><span class="line">    <span class="keyword">return</span> <span class="type">Array</span>(<span class="keyword">self</span>.people[start..&lt;end])</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">fetchPeopleBetweenIndexes</span><span class="params">(start: Int, end: Int)</span></span> -&gt; [<span class="type">Person</span>] &#123;</span><br><span class="line">    <span class="built_in">precondition</span>(start &lt; end)</span><br><span class="line">    <span class="built_in">precondition</span>(start &gt;= <span class="number">0</span>)</span><br><span class="line">    <span class="built_in">precondition</span>(end &lt;= <span class="keyword">self</span>.people.<span class="built_in">count</span>)</span><br><span class="line">    <span class="keyword">return</span> <span class="type">Array</span>(<span class="keyword">self</span>.people[start..&lt;end])</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>In this example, preconditions are used to check that the inputs to the function are valid. Start must be less than end, start must be greater than or equal to zero and end must be less than or equal to the number of people.</p>
 <p>These sort of checks make sense to have in for debug and release because the app will crash anyway when the array is read from if the indexes are invalid. Crashing in your own code gives you more signal on what’s actually going wrong.</p>
 <p>Both assertions and preconditions optionally take a string as its second parameter. This allows you to add a message which will be output when the failure occurs.</p>
 <p>As a general rule of thumb, use assertions when execution could continue, but you want to be notified of the failure during development. Use preconditions when it’s a hard failure and continuing execution could cause data corruption or other serious problem. Preconditions are also great for when you’re developing code for others to use.</p>
-<h2 id="Assert_Documentation">Assert Documentation</h2><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">public <span class="func"><span class="keyword">func</span> <span class="title">assert</span><span class="params">(</span><br><span class="line">    @autoclosure condition: <span class="params">()</span></span></span> -&gt; <span class="type">Bool</span>,</span><br><span class="line">    @autoclosure <span class="number">_</span> message: () -&gt; <span class="type">String</span> = <span class="keyword">default</span>,</span><br><span class="line">    file: <span class="type">StaticString</span> = <span class="keyword">default</span>,</span><br><span class="line">    line: <span class="type">UInt</span> = <span class="keyword">default</span>)</span><br></pre></td></tr></table></figure>
+<h2 id="Assert-Documentation"><a href="#Assert-Documentation" class="headerlink" title="Assert Documentation"></a>Assert Documentation</h2><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">func</span> <span class="title">assert</span><span class="params">(</span><br><span class="line">    @autoclosure condition: <span class="params">()</span></span></span> -&gt; <span class="type">Bool</span>,</span><br><span class="line">    <span class="meta">@autoclosure</span> <span class="number">_</span> message: () -&gt; <span class="type">String</span> = <span class="keyword">default</span>,</span><br><span class="line">    file: <span class="type">StaticString</span> = <span class="keyword">default</span>,</span><br><span class="line">    line: <span class="type">UInt</span> = <span class="keyword">default</span>)</span><br></pre></td></tr></table></figure>
 <blockquote><p>Traditional C-style assert with an optional message.</p>
 <p>Use this function for internal sanity checks that are active during testing but do not impact performance of shipping code.</p>
 <ul>
@@ -126,7 +126,7 @@
 </li>
 </ul>
 </blockquote>
-<h2 id="Precondition_Documentation">Precondition Documentation</h2><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">public <span class="func"><span class="keyword">func</span> <span class="title">precondition</span><span class="params">(</span><br><span class="line">    @autoclosure condition: <span class="params">()</span></span></span> -&gt; <span class="type">Bool</span>,</span><br><span class="line">    @autoclosure <span class="number">_</span> message: () -&gt; <span class="type">String</span> = <span class="keyword">default</span>,</span><br><span class="line">    file: <span class="type">StaticString</span> = <span class="keyword">default</span>,</span><br><span class="line">    line: <span class="type">UInt</span> = <span class="keyword">default</span>)</span><br></pre></td></tr></table></figure>
+<h2 id="Precondition-Documentation"><a href="#Precondition-Documentation" class="headerlink" title="Precondition Documentation"></a>Precondition Documentation</h2><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">func</span> <span class="title">precondition</span><span class="params">(</span><br><span class="line">    @autoclosure condition: <span class="params">()</span></span></span> -&gt; <span class="type">Bool</span>,</span><br><span class="line">    <span class="meta">@autoclosure</span> <span class="number">_</span> message: () -&gt; <span class="type">String</span> = <span class="keyword">default</span>,</span><br><span class="line">    file: <span class="type">StaticString</span> = <span class="keyword">default</span>,</span><br><span class="line">    line: <span class="type">UInt</span> = <span class="keyword">default</span>)</span><br></pre></td></tr></table></figure>
 <blockquote><p>Check a necessary condition for making forward progress.</p>
 <p>Use this function to detect conditions that must prevent the program from proceeding even in shipping code.</p>
 <ul>
@@ -142,13 +142,13 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/Swift/">Swift</a>
+  <a class="article-category-link" href="/categories/iOS开发/">iOS开发</a>
 </div>
 
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/Assert/">Assert</a><a href="/tags/Precondition/">Precondition</a><a href="/tags/Swift/">Swift</a>
+  <span></span> <a href="/tags/Swift/">Swift</a>
   </div>
 
 </div>
@@ -197,7 +197,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Difference"><span class="toc-number">1.</span> <span class="toc-text">Difference</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Assert_Documentation"><span class="toc-number">2.</span> <span class="toc-text">Assert Documentation</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Precondition_Documentation"><span class="toc-number">3.</span> <span class="toc-text">Precondition Documentation</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Difference"><span class="toc-number">1.</span> <span class="toc-text">Difference</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Assert-Documentation"><span class="toc-number">2.</span> <span class="toc-text">Assert Documentation</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Precondition-Documentation"><span class="toc-number">3.</span> <span class="toc-text">Precondition Documentation</span></a></li></ol>
  
   </div>
 
@@ -211,27 +211,27 @@
 		<ul>
 		
 		  
-			<li><a href="/categories/C-C/" title="C/C++">C/C++<sup>3</sup></a></li>
+			<li><a href="/categories/C-C-语言/" title="C/C++语言">C/C++语言<sup>3</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/Linux/" title="Linux">Linux<sup>1</sup></a></li>
+			<li><a href="/categories/Unix-Linux/" title="Unix/Linux">Unix/Linux<sup>2</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/Linux-UNIX/" title="Linux/UNIX">Linux/UNIX<sup>1</sup></a></li>
+			<li><a href="/categories/Web开发/" title="Web开发">Web开发<sup>1</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/Mac/" title="Mac">Mac<sup>1</sup></a></li>
+			<li><a href="/categories/iOS开发/" title="iOS开发">iOS开发<sup>9</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/Swift/" title="Swift">Swift<sup>2</sup></a></li>
+			<li><a href="/categories/其他/" title="其他">其他<sup>1</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/iOS/" title="iOS">iOS<sup>6</sup></a></li>
+			<li><a href="/categories/操作系统/" title="操作系统">操作系统<sup>2</sup></a></li>
 		  
 		
 		</ul>
@@ -244,63 +244,23 @@
 		<ul class="clearfix">
 		
 			
-				<li><a href="/tags/C/" title="C">C<sup>3</sup></a></li>
+				<li><a href="/tags/iOS/" title="iOS">iOS<sup>6</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/iOS/" title="iOS">iOS<sup>3</sup></a></li>
+				<li><a href="/tags/C-C/" title="C/C++">C/C++<sup>3</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/Swift/" title="Swift">Swift<sup>2</sup></a></li>
+				<li><a href="/tags/Swift/" title="Swift">Swift<sup>3</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/Precondition/" title="Precondition">Precondition<sup>1</sup></a></li>
+				<li><a href="/tags/Tomcat/" title="Tomcat">Tomcat<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/AnyGenerator/" title="AnyGenerator">AnyGenerator<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Objective-C/" title="Objective-C">Objective-C<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Apache/" title="Apache">Apache<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Mac/" title="Mac">Mac<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Linux/" title="Linux">Linux<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Ubuntu/" title="Ubuntu">Ubuntu<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Assert/" title="Assert">Assert<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/plist/" title="plist">plist<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Password-Window/" title="Password Window">Password Window<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/MailCore2/" title="MailCore2">MailCore2<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Gmail/" title="Gmail">Gmail<sup>1</sup></a></li>
+				<li><a href="/tags/工具/" title="工具">工具<sup>1</sup></a></li>
 			
 		
 			
@@ -308,15 +268,15 @@
 			
 		
 			
-				<li><a href="/tags/In-App-Purchase/" title="In-App Purchase">In-App Purchase<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/动态下载字体/" title="动态下载字体">动态下载字体<sup>1</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/mailx/" title="mailx">mailx<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Apache/" title="Apache">Apache<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/ubuntu/" title="ubuntu">ubuntu<sup>1</sup></a></li>
 			
 		
 		</ul>
@@ -380,7 +340,7 @@
 		
 
 		<p class="copyright">
-		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2015 
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
 		
 		<a href="/about" target="_blank" title="tiny1024">tiny1024</a>
 		

@@ -17,7 +17,7 @@
 <meta property="og:url" content="http://www.tiny1024.com/2015/10/16/linux-disk-usage-monitor-via-mailx/index.html">
 <meta property="og:site_name" content="Tiny1024's Blog">
 <meta property="og:description" content="本文简单介绍如何收集Linux上磁盘的使用情况，并用mailx发送到指定的邮箱。">
-<meta property="og:updated_time" content="2015-10-16T06:54:16.000Z">
+<meta property="og:updated_time" content="2015-11-06T04:02:29.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Linux监控磁盘剩余空间">
 <meta name="twitter:description" content="本文简单介绍如何收集Linux上磁盘的使用情况，并用mailx发送到指定的邮箱。">
@@ -32,7 +32,7 @@
     <link rel="apple-touch-icon" href="/img/apple114.jpg">
     <link rel="apple-touch-icon-precomposed" href="/img/apple114.jpg">
     
-    <link rel="stylesheet" href="/css/style.css" type="text/css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 
   <body>
@@ -102,7 +102,7 @@
 		
 		<p>本文简单介绍如何收集Linux上磁盘的使用情况，并用mailx发送到指定的邮箱。</p>
 <a id="more"></a>
-<h2 id="我的测试系统基本信息">我的测试系统基本信息</h2><table>
+<h2 id="我的测试系统基本信息"><a href="#我的测试系统基本信息" class="headerlink" title="我的测试系统基本信息"></a>我的测试系统基本信息</h2><table>
 <thead>
 <tr>
 <th>-</th>
@@ -123,8 +123,8 @@
 </tr>
 </tbody>
 </table>
-<h2 id="获取磁盘使用情况">获取磁盘使用情况</h2><p>使用如下脚本创建文件<code>/opt/monitor/monitor.sh</code>。并设置磁盘使用量警告阈值，和准备收到警告邮件的邮箱地址。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="shebang">#!/bin/sh</span></span><br><span class="line"><span class="built_in">limit</span>=<span class="number">85</span> <span class="comment">#如果磁盘使用量超过这个值，就回自动发送邮件</span></span><br><span class="line">time=`date <span class="string">"+%F %H:%M:%S"</span>`;</span><br><span class="line">mail=<span class="string">"target@xxxx.com"</span>; <span class="comment">#关于磁盘信息的邮件会发送到这个邮箱</span></span><br><span class="line">file=/tmp/checkdisk.txt</span><br><span class="line">info=`df -h | grep xvda1`</span><br><span class="line">percent=`df -h | grep <span class="string">'xvda1'</span> | awk <span class="string">'&#123;print int($5)&#125;'</span>`; <span class="comment">#修改xvda1来过滤出需要关心的磁盘</span></span><br><span class="line">touch /tmp/checkdisk.txt</span><br><span class="line"><span class="built_in">echo</span> <span class="string">"Time: <span class="variable">$time</span>"</span>  &gt; <span class="variable">$file</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"Disk Used: <span class="variable">$percent</span>%"</span> &gt;&gt; <span class="variable">$file</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"Info: <span class="variable">$info</span>"</span> &gt;&gt; <span class="variable">$file</span></span><br><span class="line"><span class="keyword">if</span> [[ <span class="string">"<span class="variable">$percent</span>"</span> &gt; <span class="string">"<span class="variable">$limit</span>"</span> ]]; <span class="keyword">then</span></span><br><span class="line">    /bin/mailx <span class="operator">-s</span> <span class="string">"Warn: <span class="variable">$HOSTNAME</span> disk is full"</span> <span class="variable">$mail</span> &lt; <span class="variable">$file</span></span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure></p>
-<h2 id="配置mailx">配置mailx</h2><p>在用户的home目录<code>~</code>下创建文件<code>.mailrc</code>，并添加以下内容：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">set</span> <span class="keyword">from</span>=sender@xxxx.com</span><br><span class="line"><span class="keyword">set</span> smtp=smtp.exmail.qq.com</span><br><span class="line"><span class="keyword">set</span> smtp-auth=login</span><br><span class="line"><span class="keyword">set</span> smtp-auth-<span class="keyword">user</span>=sender@xxxx.com</span><br><span class="line"><span class="keyword">set</span> smtp-auth-<span class="keyword">password</span>=XXXX</span><br><span class="line"><span class="keyword">set</span> ssl-<span class="keyword">verify</span>=<span class="keyword">ignore</span></span></span><br></pre></td></tr></table></figure></p>
+<h2 id="获取磁盘使用情况"><a href="#获取磁盘使用情况" class="headerlink" title="获取磁盘使用情况"></a>获取磁盘使用情况</h2><p>使用如下脚本创建文件<code>/opt/monitor/monitor.sh</code>。并设置磁盘使用量警告阈值，和准备收到警告邮件的邮箱地址。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/sh</span></span><br><span class="line"><span class="built_in">limit</span>=85 <span class="comment">#如果磁盘使用量超过这个值，就回自动发送邮件</span></span><br><span class="line">time=`date <span class="string">"+%F %H:%M:%S"</span>`;</span><br><span class="line">mail=<span class="string">"target@xxxx.com"</span>; <span class="comment">#关于磁盘信息的邮件会发送到这个邮箱</span></span><br><span class="line">file=/tmp/checkdisk.txt</span><br><span class="line">info=`df -h | grep xvda1`</span><br><span class="line">percent=`df -h | grep <span class="string">'xvda1'</span> | awk <span class="string">'&#123;print int($5)&#125;'</span>`; <span class="comment">#修改xvda1来过滤出需要关心的磁盘</span></span><br><span class="line">touch /tmp/checkdisk.txt</span><br><span class="line"><span class="built_in">echo</span> <span class="string">"Time: <span class="variable">$time</span>"</span>  &gt; <span class="variable">$file</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"Disk Used: <span class="variable">$percent</span>%"</span> &gt;&gt; <span class="variable">$file</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"Info: <span class="variable">$info</span>"</span> &gt;&gt; <span class="variable">$file</span></span><br><span class="line"><span class="keyword">if</span> [[ <span class="string">"<span class="variable">$percent</span>"</span> &gt; <span class="string">"<span class="variable">$limit</span>"</span> ]]; <span class="keyword">then</span></span><br><span class="line">    /bin/mailx <span class="_">-s</span> <span class="string">"Warn: <span class="variable">$HOSTNAME</span> disk is full"</span> <span class="variable">$mail</span> &lt; <span class="variable">$file</span></span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="配置mailx"><a href="#配置mailx" class="headerlink" title="配置mailx"></a>配置mailx</h2><p>在用户的home目录<code>~</code>下创建文件<code>.mailrc</code>，并添加以下内容：<br><figure class="highlight gams"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">set</span> from=sender@xxxx.com</span><br><span class="line"><span class="keyword">set</span> <span class="comment">smtp=smtp.exmail.qq.com</span></span><br><span class="line"><span class="keyword">set</span> <span class="comment">smtp-auth=login</span></span><br><span class="line"><span class="keyword">set</span> <span class="comment">smtp-auth-user=sender@xxxx.com</span></span><br><span class="line"><span class="keyword">set</span> <span class="comment">smtp-auth-password=XXXX</span></span><br><span class="line"><span class="keyword">set</span> <span class="comment">ssl-verify=ignore</span></span><br></pre></td></tr></table></figure></p>
 <table>
 <thead>
 <tr>
@@ -151,7 +151,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="配置crontab">配置crontab</h2><p>以上两步配置完成，就可以手动执行<code>monitor.sh</code>进行测试。<br>如果邮件未能发送成功，可以修改脚本显示详细的邮件发送状况：<br>把<code>monitor.sh</code>中的<code>/bin/mailx -s</code>改为<code>/bin/mailx -v -s</code>。</p>
+<h2 id="配置crontab"><a href="#配置crontab" class="headerlink" title="配置crontab"></a>配置crontab</h2><p>以上两步配置完成，就可以手动执行<code>monitor.sh</code>进行测试。<br>如果邮件未能发送成功，可以修改脚本显示详细的邮件发送状况：<br>把<code>monitor.sh</code>中的<code>/bin/mailx -s</code>改为<code>/bin/mailx -v -s</code>。</p>
 <p>如果邮件可以发送成功，接下来使用crontab设置每两个小时自动调用<code>monitor.sh</code>。<br>运行<code>crontab -e</code>，输入<code>* */2 * * * /opt/monitor/monitor.sh</code></p>
   
 	</div>
@@ -160,13 +160,13 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/Linux/">Linux</a>
+  <a class="article-category-link" href="/categories/Unix-Linux/">Unix/Linux</a>
 </div>
 
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/Linux/">Linux</a><a href="/tags/mailx/">mailx</a>
+  <span></span> <a href="/tags/mailx/">mailx</a>
   </div>
 
 </div>
@@ -188,6 +188,14 @@
 	
 <nav class="article-nav clearfix">
  
+ <div class="prev" >
+ <a href="/2015/10/23/swift-functional-programming/" title="Swift Functional Programming">
+  <strong>上一篇：</strong><br/>
+  <span>
+  Swift Functional Programming</span>
+</a>
+</div>
+
 
 <div class="next">
 <a href="/2015/09/18/swift-anygenerator/"  title="Swift AnyGenerator">
@@ -221,27 +229,27 @@
 		<ul>
 		
 		  
-			<li><a href="/categories/C-C/" title="C/C++">C/C++<sup>3</sup></a></li>
+			<li><a href="/categories/C-C-语言/" title="C/C++语言">C/C++语言<sup>3</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/Linux/" title="Linux">Linux<sup>1</sup></a></li>
+			<li><a href="/categories/Unix-Linux/" title="Unix/Linux">Unix/Linux<sup>2</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/Linux-UNIX/" title="Linux/UNIX">Linux/UNIX<sup>1</sup></a></li>
+			<li><a href="/categories/Web开发/" title="Web开发">Web开发<sup>1</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/Mac/" title="Mac">Mac<sup>1</sup></a></li>
+			<li><a href="/categories/iOS开发/" title="iOS开发">iOS开发<sup>9</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/Swift/" title="Swift">Swift<sup>2</sup></a></li>
+			<li><a href="/categories/其他/" title="其他">其他<sup>1</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/iOS/" title="iOS">iOS<sup>6</sup></a></li>
+			<li><a href="/categories/操作系统/" title="操作系统">操作系统<sup>2</sup></a></li>
 		  
 		
 		</ul>
@@ -254,63 +262,23 @@
 		<ul class="clearfix">
 		
 			
-				<li><a href="/tags/C/" title="C">C<sup>3</sup></a></li>
+				<li><a href="/tags/iOS/" title="iOS">iOS<sup>6</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/iOS/" title="iOS">iOS<sup>3</sup></a></li>
+				<li><a href="/tags/C-C/" title="C/C++">C/C++<sup>3</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/Swift/" title="Swift">Swift<sup>2</sup></a></li>
+				<li><a href="/tags/Swift/" title="Swift">Swift<sup>3</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/Precondition/" title="Precondition">Precondition<sup>1</sup></a></li>
+				<li><a href="/tags/Tomcat/" title="Tomcat">Tomcat<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/AnyGenerator/" title="AnyGenerator">AnyGenerator<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Objective-C/" title="Objective-C">Objective-C<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Apache/" title="Apache">Apache<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Mac/" title="Mac">Mac<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Linux/" title="Linux">Linux<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Ubuntu/" title="Ubuntu">Ubuntu<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Assert/" title="Assert">Assert<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/plist/" title="plist">plist<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Password-Window/" title="Password Window">Password Window<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/MailCore2/" title="MailCore2">MailCore2<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Gmail/" title="Gmail">Gmail<sup>1</sup></a></li>
+				<li><a href="/tags/工具/" title="工具">工具<sup>1</sup></a></li>
 			
 		
 			
@@ -318,15 +286,15 @@
 			
 		
 			
-				<li><a href="/tags/In-App-Purchase/" title="In-App Purchase">In-App Purchase<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/动态下载字体/" title="动态下载字体">动态下载字体<sup>1</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/mailx/" title="mailx">mailx<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Apache/" title="Apache">Apache<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/ubuntu/" title="ubuntu">ubuntu<sup>1</sup></a></li>
 			
 		
 		</ul>
@@ -390,7 +358,7 @@
 		
 
 		<p class="copyright">
-		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2015 
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
 		
 		<a href="/about" target="_blank" title="tiny1024">tiny1024</a>
 		

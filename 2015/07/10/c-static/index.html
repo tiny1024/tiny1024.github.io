@@ -17,7 +17,7 @@
 <meta property="og:url" content="http://www.tiny1024.com/2015/07/10/c-static/index.html">
 <meta property="og:site_name" content="Tiny1024's Blog">
 <meta property="og:description" content="本文介绍C语言中的static关键字，包括修饰变量和函数，其中修饰变量包括静态全局变量和静态局部变量。">
-<meta property="og:updated_time" content="2015-09-17T07:39:27.000Z">
+<meta property="og:updated_time" content="2015-11-06T04:05:19.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="C语言中的static">
 <meta name="twitter:description" content="本文介绍C语言中的static关键字，包括修饰变量和函数，其中修饰变量包括静态全局变量和静态局部变量。">
@@ -32,7 +32,7 @@
     <link rel="apple-touch-icon" href="/img/apple114.jpg">
     <link rel="apple-touch-icon-precomposed" href="/img/apple114.jpg">
     
-    <link rel="stylesheet" href="/css/style.css" type="text/css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 
   <body>
@@ -102,12 +102,12 @@
 		
 		<p>本文介绍C语言中的<code>static</code>关键字，包括修饰变量和函数，其中修饰变量包括静态全局变量和静态局部变量。</p>
 <a id="more"></a>
-<h2 id="修饰变量">修饰变量</h2><p>变量又分为局部变量和全局变量，它们都存在内存的静态区。</p>
-<h3 id="静态全局变量">静态全局变量</h3><p>作用域仅限于变量被定义的文件中，其他文件即使用extern声名也无法使用它。准确的说：作用域是从定义之处开始，到文件结尾处结束，在定义之处前面的那些代码也不能使用它。</p>
-<h3 id="静态局部变量">静态局部变量</h3><p>在函数体里面定义的，就只能在这个函数里用了，同一个文档中的其它函数也用不了。由于被static修饰的变量总是在内存的静态区，所以即使这个函数运行结束，这个静态变量的值也不会被销毁，函数下次使用时仍然能用到这个值。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span><span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">int</span> j;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">fun1</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">static</span> <span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">  i++;</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"## i = %d\n"</span>, i);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">fun2</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</span><br><span class="line">  j = <span class="number">0</span>;</span><br><span class="line">  j++;</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"== j = %d\n"</span>, j);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> k = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">for</span>(k = <span class="number">0</span>; k &lt; <span class="number">5</span>; k++) &#123;</span><br><span class="line">    fun1();</span><br><span class="line">    fun2();</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>程序运行结果为：<br><figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">## i = 1</span><br><span class="line"><span class="header">== j = 1</span></span><br><span class="line">## i = 2</span><br><span class="line"><span class="header">== j = 1</span></span><br><span class="line">## i = 3</span><br><span class="line"><span class="header">== j = 1</span></span><br><span class="line">## i = 4</span><br><span class="line"><span class="header">== j = 1</span></span><br><span class="line">## i = 5</span><br><span class="line"><span class="header">== j = 1</span></span><br></pre></td></tr></table></figure></p>
-<h2 id="修饰函数">修饰函数</h2><p>函数前加static使得函数成为静态函数。<br>但此处static的含义不是指存储方式，而是指对函数的作用域仅局限于本文件（所以又称内部函数）。<br>使用内部函数的好处是：不同的人编写不同的函数时，不用担心自己定义的函数是否会与其他文件中的函数同名。</p>
+<h2 id="修饰变量"><a href="#修饰变量" class="headerlink" title="修饰变量"></a>修饰变量</h2><p>变量又分为局部变量和全局变量，它们都存在内存的静态区。</p>
+<h3 id="静态全局变量"><a href="#静态全局变量" class="headerlink" title="静态全局变量"></a>静态全局变量</h3><p>作用域仅限于变量被定义的文件中，其他文件即使用extern声名也无法使用它。准确的说：作用域是从定义之处开始，到文件结尾处结束，在定义之处前面的那些代码也不能使用它。</p>
+<h3 id="静态局部变量"><a href="#静态局部变量" class="headerlink" title="静态局部变量"></a>静态局部变量</h3><p>在函数体里面定义的，就只能在这个函数里用了，同一个文档中的其它函数也用不了。由于被static修饰的变量总是在内存的静态区，所以即使这个函数运行结束，这个静态变量的值也不会被销毁，函数下次使用时仍然能用到这个值。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">int</span> j;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">fun1</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">static</span> <span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">  i++;</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"## i = %d\n"</span>, i);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">fun2</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</span><br><span class="line">  j = <span class="number">0</span>;</span><br><span class="line">  j++;</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"== j = %d\n"</span>, j);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> k = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">for</span>(k = <span class="number">0</span>; k &lt; <span class="number">5</span>; k++) &#123;</span><br><span class="line">    fun1();</span><br><span class="line">    fun2();</span><br><span class="line">  &#125;</span><br><span class="line">  return <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>程序运行结果为：<br><figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">## i = 1</span><br><span class="line"><span class="section">== j = 1</span></span><br><span class="line">## i = 2</span><br><span class="line"><span class="section">== j = 1</span></span><br><span class="line">## i = 3</span><br><span class="line"><span class="section">== j = 1</span></span><br><span class="line">## i = 4</span><br><span class="line"><span class="section">== j = 1</span></span><br><span class="line">## i = 5</span><br><span class="line"><span class="section">== j = 1</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="修饰函数"><a href="#修饰函数" class="headerlink" title="修饰函数"></a>修饰函数</h2><p>函数前加static使得函数成为静态函数。<br>但此处static的含义不是指存储方式，而是指对函数的作用域仅局限于本文件（所以又称内部函数）。<br>使用内部函数的好处是：不同的人编写不同的函数时，不用担心自己定义的函数是否会与其他文件中的函数同名。</p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -115,13 +115,13 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/C-C/">C/C++</a>
+  <a class="article-category-link" href="/categories/C-C-语言/">C/C++语言</a>
 </div>
 
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/C/">C</a>
+  <span></span> <a href="/tags/C-C/">C/C++</a>
   </div>
 
 </div>
@@ -184,27 +184,27 @@
 		<ul>
 		
 		  
-			<li><a href="/categories/C-C/" title="C/C++">C/C++<sup>3</sup></a></li>
+			<li><a href="/categories/C-C-语言/" title="C/C++语言">C/C++语言<sup>3</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/Linux/" title="Linux">Linux<sup>1</sup></a></li>
+			<li><a href="/categories/Unix-Linux/" title="Unix/Linux">Unix/Linux<sup>2</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/Linux-UNIX/" title="Linux/UNIX">Linux/UNIX<sup>1</sup></a></li>
+			<li><a href="/categories/Web开发/" title="Web开发">Web开发<sup>1</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/Mac/" title="Mac">Mac<sup>1</sup></a></li>
+			<li><a href="/categories/iOS开发/" title="iOS开发">iOS开发<sup>9</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/Swift/" title="Swift">Swift<sup>2</sup></a></li>
+			<li><a href="/categories/其他/" title="其他">其他<sup>1</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/iOS/" title="iOS">iOS<sup>6</sup></a></li>
+			<li><a href="/categories/操作系统/" title="操作系统">操作系统<sup>2</sup></a></li>
 		  
 		
 		</ul>
@@ -217,63 +217,23 @@
 		<ul class="clearfix">
 		
 			
-				<li><a href="/tags/C/" title="C">C<sup>3</sup></a></li>
+				<li><a href="/tags/iOS/" title="iOS">iOS<sup>6</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/iOS/" title="iOS">iOS<sup>3</sup></a></li>
+				<li><a href="/tags/C-C/" title="C/C++">C/C++<sup>3</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/Swift/" title="Swift">Swift<sup>2</sup></a></li>
+				<li><a href="/tags/Swift/" title="Swift">Swift<sup>3</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/Precondition/" title="Precondition">Precondition<sup>1</sup></a></li>
+				<li><a href="/tags/Tomcat/" title="Tomcat">Tomcat<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/AnyGenerator/" title="AnyGenerator">AnyGenerator<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Objective-C/" title="Objective-C">Objective-C<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Apache/" title="Apache">Apache<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Mac/" title="Mac">Mac<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Linux/" title="Linux">Linux<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Ubuntu/" title="Ubuntu">Ubuntu<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Assert/" title="Assert">Assert<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/plist/" title="plist">plist<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Password-Window/" title="Password Window">Password Window<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/MailCore2/" title="MailCore2">MailCore2<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Gmail/" title="Gmail">Gmail<sup>1</sup></a></li>
+				<li><a href="/tags/工具/" title="工具">工具<sup>1</sup></a></li>
 			
 		
 			
@@ -281,15 +241,15 @@
 			
 		
 			
-				<li><a href="/tags/In-App-Purchase/" title="In-App Purchase">In-App Purchase<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/动态下载字体/" title="动态下载字体">动态下载字体<sup>1</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/mailx/" title="mailx">mailx<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Apache/" title="Apache">Apache<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/ubuntu/" title="ubuntu">ubuntu<sup>1</sup></a></li>
 			
 		
 		</ul>
@@ -353,7 +313,7 @@
 		
 
 		<p class="copyright">
-		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2015 
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
 		
 		<a href="/about" target="_blank" title="tiny1024">tiny1024</a>
 		

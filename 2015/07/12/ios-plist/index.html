@@ -17,7 +17,7 @@
 <meta property="og:url" content="http://www.tiny1024.com/2015/07/12/ios-plist/index.html">
 <meta property="og:site_name" content="Tiny1024's Blog">
 <meta property="og:description" content="本文简单介绍plist和基本操作。">
-<meta property="og:updated_time" content="2015-09-17T08:06:13.000Z">
+<meta property="og:updated_time" content="2015-11-06T04:02:16.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS简单的plist文件读写操作">
 <meta name="twitter:description" content="本文简单介绍plist和基本操作。">
@@ -32,7 +32,7 @@
     <link rel="apple-touch-icon" href="/img/apple114.jpg">
     <link rel="apple-touch-icon-precomposed" href="/img/apple114.jpg">
     
-    <link rel="stylesheet" href="/css/style.css" type="text/css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 
   <body>
@@ -102,15 +102,15 @@
 		
 		<p>本文简单介绍plist和基本操作。</p>
 <a id="more"></a>
-<h2 id="plist简单介绍">plist简单介绍</h2><p>全名是Property List，属性列表文件，是一种用来存储序列化后的对象的文件。<br>文件扩展名为.plist，因此通常被称为plist文件。文件是XML格式的。<br>plist文件通常用于储存用户设置，也可以用于存储Bundle和Application的信息。</p>
-<h2 id="文件保存的位置和读写操作">文件保存的位置和读写操作</h2><h3 id="工程沙盒里">工程沙盒里</h3><p>说明：Document文件夹下，以文件方式读取和写入</p>
+<h2 id="plist简单介绍"><a href="#plist简单介绍" class="headerlink" title="plist简单介绍"></a>plist简单介绍</h2><p>全名是Property List，属性列表文件，是一种用来存储序列化后的对象的文件。<br>文件扩展名为.plist，因此通常被称为plist文件。文件是XML格式的。<br>plist文件通常用于储存用户设置，也可以用于存储Bundle和Application的信息。</p>
+<h2 id="文件保存的位置和读写操作"><a href="#文件保存的位置和读写操作" class="headerlink" title="文件保存的位置和读写操作"></a>文件保存的位置和读写操作</h2><h3 id="工程沙盒里"><a href="#工程沙盒里" class="headerlink" title="工程沙盒里"></a>工程沙盒里</h3><p>说明：Document文件夹下，以文件方式读取和写入</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSArray</span> *items = [<span class="built_in">NSArray</span> arrayWithObjects:<span class="string">@"one"</span>, <span class="string">@"two"</span>, <span class="string">@"three"</span>, <span class="string">@"four"</span>, <span class="literal">nil</span>];</span><br><span class="line"></span><br><span class="line"><span class="comment">// 生成文件存储路径为沙盒下的items.plist</span></span><br><span class="line"><span class="built_in">NSString</span> *dir = [<span class="built_in">NSSearchPathForDirectoriesInDomains</span>(<span class="built_in">NSDocumentDirectory</span>, <span class="built_in">NSUserDomainMask</span>, <span class="literal">YES</span>) objectAtIndex:<span class="number">0</span>];</span><br><span class="line"><span class="built_in">NSString</span> *path = [dir stringByAppendingPathComponent:<span class="string">@"items.plist"</span>];</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@"%@"</span>, path);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 读取</span></span><br><span class="line"><span class="built_in">NSMutableArray</span> *existingItems = [<span class="built_in">NSMutableArray</span> arrayWithContentsOfFile:path];</span><br><span class="line"><span class="keyword">if</span> (!existingItems)</span><br><span class="line">    existingItems = [[<span class="built_in">NSMutableArray</span> alloc] init];</span><br><span class="line">[existingItems addObjectsFromArray:items];</span><br><span class="line"></span><br><span class="line"><span class="comment">// 写入</span></span><br><span class="line">[existingItems writeToFile:path atomically:<span class="literal">YES</span>];</span><br></pre></td></tr></table></figure>
-<p>plist文件在模拟器中的存储路径：<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/Users/xxx/Library/Developer/CoreSimulator/Devices</span><br><span class="line">  /<span class="number">974</span>ED177-<span class="number">2</span>CE1-<span class="number">42</span>AB-A8D1-<span class="number">0</span>C5FD69ACC18/data/Containers/Data/Application</span><br><span class="line">  /DD92537F-<span class="number">7</span>AD5-<span class="number">4</span>F7C-<span class="number">9</span>BD6-<span class="number">2</span>DE1C9527F0F/Documents/items<span class="variable">.plist</span></span><br></pre></td></tr></table></figure></p>
-<h3 id="工程自身里">工程自身里</h3><p>说明：在工程里手动创建plist文件，并写入文件内容，在代码中读取plist</p>
+<p>plist文件在模拟器中的存储路径：<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/Users/xxx/Library/Developer/CoreSimulator/Devices</span><br><span class="line">  /<span class="number">974</span>ED177<span class="number">-2</span>CE1<span class="number">-42</span>AB-A8D1<span class="number">-0</span>C5FD69ACC18/data/Containers/Data/Application</span><br><span class="line">  /DD92537F<span class="number">-7</span>AD5<span class="number">-4</span>F7C<span class="number">-9</span>BD6<span class="number">-2</span>DE1C9527F0F/Documents/items.plist</span><br></pre></td></tr></table></figure></p>
+<h3 id="工程自身里"><a href="#工程自身里" class="headerlink" title="工程自身里"></a>工程自身里</h3><p>说明：在工程里手动创建plist文件，并写入文件内容，在代码中读取plist</p>
 <p>工程下的plist是我们不能在代码中写入的，只可以读取。<br>需要先在工程中手动创建provinces.plist文件，然后使用下边的代码读取。</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSString</span> *path = [[<span class="built_in">NSBundle</span> mainBundle] pathForResource:<span class="string">@"provinces"</span> ofType:<span class="string">@"plist"</span>];</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@"%@"</span>, path);</span><br><span class="line"><span class="built_in">NSDictionary</span> *dict = [<span class="built_in">NSDictionary</span> dictionaryWithContentsOfFile:path];</span><br></pre></td></tr></table></figure>
-<p>plist文件在模拟器中的存储路径：<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/Users/xxx/Library/Developer/CoreSimulator/Devices</span><br><span class="line">  /<span class="number">974</span>ED177-<span class="number">2</span>CE1-<span class="number">42</span>AB-A8D1-<span class="number">0</span>C5FD69ACC18/data/Containers/Bundle/Application</span><br><span class="line">  /DD92537F-<span class="number">7</span>AD5-<span class="number">4</span>F7C-<span class="number">9</span>BD6-<span class="number">2</span>DE1C9527F0F/TestPList<span class="variable">.app</span>/provinces<span class="variable">.plist</span></span><br></pre></td></tr></table></figure></p>
-<h3 id="工程沙盒里-1">工程沙盒里</h3><p>说明：使用NSUserDefaults读取和写入</p>
+<p>plist文件在模拟器中的存储路径：<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/Users/xxx/Library/Developer/CoreSimulator/Devices</span><br><span class="line">  /<span class="number">974</span>ED177<span class="number">-2</span>CE1<span class="number">-42</span>AB-A8D1<span class="number">-0</span>C5FD69ACC18/data/Containers/Bundle/Application</span><br><span class="line">  /DD92537F<span class="number">-7</span>AD5<span class="number">-4</span>F7C<span class="number">-9</span>BD6<span class="number">-2</span>DE1C9527F0F/TestPList.app/provinces.plist</span><br></pre></td></tr></table></figure></p>
+<h3 id="工程沙盒里-1"><a href="#工程沙盒里-1" class="headerlink" title="工程沙盒里"></a>工程沙盒里</h3><p>说明：使用NSUserDefaults读取和写入</p>
 <p>通常来说我们会使用NSUserDefaults来读取和写入少量配置信息。</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSUserDefaults</span> *defaults = [<span class="built_in">NSUserDefaults</span> standardUserDefaults];</span><br><span class="line"><span class="built_in">NSMutableDictionary</span> *userInfo = [defaults objectForKey:<span class="string">@"UserInfo"</span>];</span><br><span class="line"><span class="built_in">NSString</span> *name = [userInfo objectForKey:<span class="string">@"Name"</span>];</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@"name: %@"</span>, name);</span><br><span class="line"></span><br><span class="line">[userInfo setObject:<span class="string">@"Beijing"</span> forKey:<span class="string">@"City"</span>];</span><br><span class="line">[defaults setObject:userInfo forKey:<span class="string">@"UserInfo"</span>];</span><br><span class="line"></span><br><span class="line">[defaults setObject:<span class="string">@"my session id"</span> forKey:<span class="string">@"SessionInfo"</span>];</span><br><span class="line">[defaults removeObjectForKey:<span class="string">@"OldKey"</span>];</span><br><span class="line"></span><br><span class="line"><span class="comment">// 同步</span></span><br><span class="line">[defaults synchronize];</span><br></pre></td></tr></table></figure>
   
@@ -120,13 +120,13 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/iOS/">iOS</a>
+  <a class="article-category-link" href="/categories/iOS开发/">iOS开发</a>
 </div>
 
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/iOS/">iOS</a><a href="/tags/plist/">plist</a>
+  <span></span> <a href="/tags/iOS/">iOS</a>
   </div>
 
 </div>
@@ -189,27 +189,27 @@
 		<ul>
 		
 		  
-			<li><a href="/categories/C-C/" title="C/C++">C/C++<sup>3</sup></a></li>
+			<li><a href="/categories/C-C-语言/" title="C/C++语言">C/C++语言<sup>3</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/Linux/" title="Linux">Linux<sup>1</sup></a></li>
+			<li><a href="/categories/Unix-Linux/" title="Unix/Linux">Unix/Linux<sup>2</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/Linux-UNIX/" title="Linux/UNIX">Linux/UNIX<sup>1</sup></a></li>
+			<li><a href="/categories/Web开发/" title="Web开发">Web开发<sup>1</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/Mac/" title="Mac">Mac<sup>1</sup></a></li>
+			<li><a href="/categories/iOS开发/" title="iOS开发">iOS开发<sup>9</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/Swift/" title="Swift">Swift<sup>2</sup></a></li>
+			<li><a href="/categories/其他/" title="其他">其他<sup>1</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/iOS/" title="iOS">iOS<sup>6</sup></a></li>
+			<li><a href="/categories/操作系统/" title="操作系统">操作系统<sup>2</sup></a></li>
 		  
 		
 		</ul>
@@ -222,63 +222,23 @@
 		<ul class="clearfix">
 		
 			
-				<li><a href="/tags/C/" title="C">C<sup>3</sup></a></li>
+				<li><a href="/tags/iOS/" title="iOS">iOS<sup>6</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/iOS/" title="iOS">iOS<sup>3</sup></a></li>
+				<li><a href="/tags/C-C/" title="C/C++">C/C++<sup>3</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/Swift/" title="Swift">Swift<sup>2</sup></a></li>
+				<li><a href="/tags/Swift/" title="Swift">Swift<sup>3</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/Precondition/" title="Precondition">Precondition<sup>1</sup></a></li>
+				<li><a href="/tags/Tomcat/" title="Tomcat">Tomcat<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/AnyGenerator/" title="AnyGenerator">AnyGenerator<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Objective-C/" title="Objective-C">Objective-C<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Apache/" title="Apache">Apache<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Mac/" title="Mac">Mac<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Linux/" title="Linux">Linux<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Ubuntu/" title="Ubuntu">Ubuntu<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Assert/" title="Assert">Assert<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/plist/" title="plist">plist<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Password-Window/" title="Password Window">Password Window<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/MailCore2/" title="MailCore2">MailCore2<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Gmail/" title="Gmail">Gmail<sup>1</sup></a></li>
+				<li><a href="/tags/工具/" title="工具">工具<sup>1</sup></a></li>
 			
 		
 			
@@ -286,15 +246,15 @@
 			
 		
 			
-				<li><a href="/tags/In-App-Purchase/" title="In-App Purchase">In-App Purchase<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/动态下载字体/" title="动态下载字体">动态下载字体<sup>1</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/mailx/" title="mailx">mailx<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Apache/" title="Apache">Apache<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/ubuntu/" title="ubuntu">ubuntu<sup>1</sup></a></li>
 			
 		
 		</ul>
@@ -358,7 +318,7 @@
 		
 
 		<p class="copyright">
-		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2015 
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
 		
 		<a href="/about" target="_blank" title="tiny1024">tiny1024</a>
 		

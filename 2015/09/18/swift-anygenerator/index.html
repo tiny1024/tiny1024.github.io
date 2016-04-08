@@ -17,7 +17,7 @@
 <meta property="og:url" content="http://www.tiny1024.com/2015/09/18/swift-anygenerator/index.html">
 <meta property="og:site_name" content="Tiny1024's Blog">
 <meta property="og:description" content="In swift 2.0, the GeneratorOf has been changed to AnyGenerator.">
-<meta property="og:updated_time" content="2015-09-18T10:24:48.000Z">
+<meta property="og:updated_time" content="2015-11-06T04:03:13.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Swift AnyGenerator">
 <meta name="twitter:description" content="In swift 2.0, the GeneratorOf has been changed to AnyGenerator.">
@@ -32,7 +32,7 @@
     <link rel="apple-touch-icon" href="/img/apple114.jpg">
     <link rel="apple-touch-icon-precomposed" href="/img/apple114.jpg">
     
-    <link rel="stylesheet" href="/css/style.css" type="text/css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 
   <body>
@@ -96,21 +96,21 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Ordered_Dictionary"><span class="toc-number">1.</span> <span class="toc-text">Ordered Dictionary</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Make_OrderedDictionary_conform_to_SequenceType"><span class="toc-number">2.</span> <span class="toc-text">Make OrderedDictionary conform to SequenceType</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Ordered-Dictionary"><span class="toc-number">1.</span> <span class="toc-text">Ordered Dictionary</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Make-OrderedDictionary-conform-to-SequenceType"><span class="toc-number">2.</span> <span class="toc-text">Make OrderedDictionary conform to SequenceType</span></a></li></ol>
 		
 		</div>
 		
 		<p>In swift 2.0, the <code>GeneratorOf</code> has been changed to <code>AnyGenerator</code>.</p>
 <a id="more"></a>
-<h2 id="Ordered_Dictionary">Ordered Dictionary</h2><p>We will create a ordered dictionary with the following methods:</p>
+<h2 id="Ordered-Dictionary"><a href="#Ordered-Dictionary" class="headerlink" title="Ordered Dictionary"></a>Ordered Dictionary</h2><p>We will create a ordered dictionary with the following methods:</p>
 <ul>
 <li>insert</li>
 <li>removeAtIndex</li>
 <li>subscript[key]</li>
 <li>subscript[index]</li>
 </ul>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">OrderedDictionary</span>&lt;<span class="title">KeyType</span>: <span class="title">Hashable</span>, <span class="title">ValueType</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">typealias</span> <span class="type">ArrayType</span> = [<span class="type">KeyType</span>]</span><br><span class="line">    <span class="keyword">typealias</span> <span class="type">DictionaryType</span> = [<span class="type">KeyType</span>: <span class="type">ValueType</span>]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> array = <span class="type">ArrayType</span>()</span><br><span class="line">    <span class="keyword">var</span> dictionary = <span class="type">DictionaryType</span>()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">mutating</span> <span class="func"><span class="keyword">func</span> <span class="title">insert</span><span class="params">(value: ValueType, forKey key: KeyType, atIndex index: Int)</span></span> -&gt; <span class="type">ValueType</span>? &#123;</span><br><span class="line">        <span class="keyword">var</span> adjustedIndex = index</span><br><span class="line">        <span class="keyword">let</span> existingValue = <span class="keyword">self</span>.dictionary[key]</span><br><span class="line">        <span class="keyword">if</span> existingValue != <span class="literal">nil</span> &#123;</span><br><span class="line">            <span class="keyword">let</span> existingIndex = <span class="keyword">self</span>.array.indexOf(key)!</span><br><span class="line">            <span class="keyword">if</span> existingIndex &lt; index &#123;</span><br><span class="line">                adjustedIndex--</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">self</span>.array.removeAtIndex(existingIndex)</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">self</span>.array.insert(key, atIndex: adjustedIndex)</span><br><span class="line">        <span class="keyword">self</span>.dictionary[key] = value</span><br><span class="line">        <span class="keyword">return</span> existingValue</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">mutating</span> <span class="func"><span class="keyword">func</span> <span class="title">removeAtIndex</span><span class="params">(index: Int)</span></span> -&gt; (<span class="type">KeyType</span>, <span class="type">ValueType</span>) &#123;</span><br><span class="line">        precondition(index &lt; <span class="keyword">self</span>.array.<span class="built_in">count</span>, <span class="string">"Index out-of-bounds"</span>)</span><br><span class="line">        <span class="keyword">let</span> key = <span class="keyword">self</span>.array.removeAtIndex(index)</span><br><span class="line">        <span class="keyword">let</span> value = <span class="keyword">self</span>.dictionary.removeValueForKey(key)!</span><br><span class="line">        <span class="keyword">return</span> (key, value)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> <span class="built_in">count</span>: <span class="type">Int</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">self</span>.array.<span class="built_in">count</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">subscript</span>(key: <span class="type">KeyType</span>) -&gt; <span class="type">ValueType</span>? &#123;</span><br><span class="line">        <span class="keyword">get</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">self</span>.dictionary[key]</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">set</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">let</span> <span class="number">_</span> = <span class="keyword">self</span>.array.indexOf(key) &#123;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">self</span>.array.append(key);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">self</span>.dictionary[key] = newValue</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">subscript</span>(index: <span class="type">Int</span>) -&gt; (<span class="type">KeyType</span>, <span class="type">ValueType</span>) &#123;</span><br><span class="line">        <span class="keyword">get</span> &#123;</span><br><span class="line">            precondition(index &lt; <span class="keyword">self</span>.array.<span class="built_in">count</span>, <span class="string">"Index out-of-bounds"</span>)</span><br><span class="line">            <span class="keyword">let</span> key = <span class="keyword">self</span>.array[index];</span><br><span class="line">            <span class="keyword">let</span> value = <span class="keyword">self</span>.dictionary[key]!</span><br><span class="line">            <span class="keyword">return</span> (key, value)</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">set</span> &#123;</span><br><span class="line">            <span class="keyword">let</span> (key, value) = newValue</span><br><span class="line">            <span class="keyword">self</span>.insert(value, forKey: key, atIndex: index)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="Make_OrderedDictionary_conform_to_SequenceType">Make OrderedDictionary conform to SequenceType</h2><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">OrderedDictionary</span>: <span class="title">SequenceType</span> </span>&#123;</span><br><span class="line">    <span class="keyword">typealias</span> <span class="type">GeneratorType</span> = <span class="type">AnyGenerator</span>&lt;(<span class="type">KeyType</span>, <span class="type">ValueType</span>)&gt;</span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">generate</span><span class="params">()</span></span> -&gt; <span class="type">AnyGenerator</span>&lt;(<span class="type">KeyType</span>, <span class="type">ValueType</span>)&gt; &#123;</span><br><span class="line">        <span class="keyword">var</span> index = <span class="number">0</span></span><br><span class="line">        <span class="keyword">return</span> anyGenerator &#123;</span><br><span class="line">            <span class="keyword">if</span> index &lt; <span class="keyword">self</span>.array.<span class="built_in">count</span> &#123;</span><br><span class="line">                <span class="keyword">let</span> key = <span class="keyword">self</span>.array[index++]</span><br><span class="line">                <span class="keyword">return</span> (key, <span class="keyword">self</span>.dictionary[key]!)</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">OrderedDictionary</span>&lt;<span class="title">KeyType</span>: <span class="title">Hashable</span>, <span class="title">ValueType</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">typealias</span> <span class="type">ArrayType</span> = [<span class="type">KeyType</span>]</span><br><span class="line">    <span class="keyword">typealias</span> <span class="type">DictionaryType</span> = [<span class="type">KeyType</span>: <span class="type">ValueType</span>]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> array = <span class="type">ArrayType</span>()</span><br><span class="line">    <span class="keyword">var</span> dictionary = <span class="type">DictionaryType</span>()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">mutating</span> <span class="function"><span class="keyword">func</span> <span class="title">insert</span><span class="params">(value: ValueType, forKey key: KeyType, atIndex index: Int)</span></span> -&gt; <span class="type">ValueType</span>? &#123;</span><br><span class="line">        <span class="keyword">var</span> adjustedIndex = index</span><br><span class="line">        <span class="keyword">let</span> existingValue = <span class="keyword">self</span>.dictionary[key]</span><br><span class="line">        <span class="keyword">if</span> existingValue != <span class="literal">nil</span> &#123;</span><br><span class="line">            <span class="keyword">let</span> existingIndex = <span class="keyword">self</span>.array.indexOf(key)!</span><br><span class="line">            <span class="keyword">if</span> existingIndex &lt; index &#123;</span><br><span class="line">                adjustedIndex--</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">self</span>.array.removeAtIndex(existingIndex)</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">self</span>.array.insert(key, atIndex: adjustedIndex)</span><br><span class="line">        <span class="keyword">self</span>.dictionary[key] = value</span><br><span class="line">        <span class="keyword">return</span> existingValue</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">mutating</span> <span class="function"><span class="keyword">func</span> <span class="title">removeAtIndex</span><span class="params">(index: Int)</span></span> -&gt; (<span class="type">KeyType</span>, <span class="type">ValueType</span>) &#123;</span><br><span class="line">        <span class="built_in">precondition</span>(index &lt; <span class="keyword">self</span>.array.<span class="built_in">count</span>, <span class="string">"Index out-of-bounds"</span>)</span><br><span class="line">        <span class="keyword">let</span> key = <span class="keyword">self</span>.array.removeAtIndex(index)</span><br><span class="line">        <span class="keyword">let</span> value = <span class="keyword">self</span>.dictionary.removeValueForKey(key)!</span><br><span class="line">        <span class="keyword">return</span> (key, value)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> <span class="built_in">count</span>: <span class="type">Int</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">self</span>.array.<span class="built_in">count</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">subscript</span>(key: <span class="type">KeyType</span>) -&gt; <span class="type">ValueType</span>? &#123;</span><br><span class="line">        <span class="keyword">get</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">self</span>.dictionary[key]</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">set</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">let</span> <span class="number">_</span> = <span class="keyword">self</span>.array.indexOf(key) &#123;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">self</span>.array.append(key);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">self</span>.dictionary[key] = newValue</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">subscript</span>(index: <span class="type">Int</span>) -&gt; (<span class="type">KeyType</span>, <span class="type">ValueType</span>) &#123;</span><br><span class="line">        <span class="keyword">get</span> &#123;</span><br><span class="line">            <span class="built_in">precondition</span>(index &lt; <span class="keyword">self</span>.array.<span class="built_in">count</span>, <span class="string">"Index out-of-bounds"</span>)</span><br><span class="line">            <span class="keyword">let</span> key = <span class="keyword">self</span>.array[index];</span><br><span class="line">            <span class="keyword">let</span> value = <span class="keyword">self</span>.dictionary[key]!</span><br><span class="line">            <span class="keyword">return</span> (key, value)</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">set</span> &#123;</span><br><span class="line">            <span class="keyword">let</span> (key, value) = newValue</span><br><span class="line">            <span class="keyword">self</span>.insert(value, forKey: key, atIndex: index)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Make-OrderedDictionary-conform-to-SequenceType"><a href="#Make-OrderedDictionary-conform-to-SequenceType" class="headerlink" title="Make OrderedDictionary conform to SequenceType"></a>Make OrderedDictionary conform to SequenceType</h2><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">OrderedDictionary</span>: <span class="title">SequenceType</span> </span>&#123;</span><br><span class="line">    <span class="keyword">typealias</span> <span class="type">GeneratorType</span> = <span class="type">AnyGenerator</span>&lt;(<span class="type">KeyType</span>, <span class="type">ValueType</span>)&gt;</span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">generate</span><span class="params">()</span></span> -&gt; <span class="type">AnyGenerator</span>&lt;(<span class="type">KeyType</span>, <span class="type">ValueType</span>)&gt; &#123;</span><br><span class="line">        <span class="keyword">var</span> index = <span class="number">0</span></span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">anyGenerator</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> index &lt; <span class="keyword">self</span>.array.<span class="built_in">count</span> &#123;</span><br><span class="line">                <span class="keyword">let</span> key = <span class="keyword">self</span>.array[index++]</span><br><span class="line">                <span class="keyword">return</span> (key, <span class="keyword">self</span>.dictionary[key]!)</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -118,13 +118,13 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/Swift/">Swift</a>
+  <a class="article-category-link" href="/categories/iOS开发/">iOS开发</a>
 </div>
 
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/AnyGenerator/">AnyGenerator</a><a href="/tags/Swift/">Swift</a>
+  <span></span> <a href="/tags/Swift/">Swift</a>
   </div>
 
 </div>
@@ -173,7 +173,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Ordered_Dictionary"><span class="toc-number">1.</span> <span class="toc-text">Ordered Dictionary</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Make_OrderedDictionary_conform_to_SequenceType"><span class="toc-number">2.</span> <span class="toc-text">Make OrderedDictionary conform to SequenceType</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Ordered-Dictionary"><span class="toc-number">1.</span> <span class="toc-text">Ordered Dictionary</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Make-OrderedDictionary-conform-to-SequenceType"><span class="toc-number">2.</span> <span class="toc-text">Make OrderedDictionary conform to SequenceType</span></a></li></ol>
  
   </div>
 
@@ -187,27 +187,27 @@
 		<ul>
 		
 		  
-			<li><a href="/categories/C-C/" title="C/C++">C/C++<sup>3</sup></a></li>
+			<li><a href="/categories/C-C-语言/" title="C/C++语言">C/C++语言<sup>3</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/Linux/" title="Linux">Linux<sup>1</sup></a></li>
+			<li><a href="/categories/Unix-Linux/" title="Unix/Linux">Unix/Linux<sup>2</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/Linux-UNIX/" title="Linux/UNIX">Linux/UNIX<sup>1</sup></a></li>
+			<li><a href="/categories/Web开发/" title="Web开发">Web开发<sup>1</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/Mac/" title="Mac">Mac<sup>1</sup></a></li>
+			<li><a href="/categories/iOS开发/" title="iOS开发">iOS开发<sup>9</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/Swift/" title="Swift">Swift<sup>2</sup></a></li>
+			<li><a href="/categories/其他/" title="其他">其他<sup>1</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/iOS/" title="iOS">iOS<sup>6</sup></a></li>
+			<li><a href="/categories/操作系统/" title="操作系统">操作系统<sup>2</sup></a></li>
 		  
 		
 		</ul>
@@ -220,63 +220,23 @@
 		<ul class="clearfix">
 		
 			
-				<li><a href="/tags/C/" title="C">C<sup>3</sup></a></li>
+				<li><a href="/tags/iOS/" title="iOS">iOS<sup>6</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/iOS/" title="iOS">iOS<sup>3</sup></a></li>
+				<li><a href="/tags/C-C/" title="C/C++">C/C++<sup>3</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/Swift/" title="Swift">Swift<sup>2</sup></a></li>
+				<li><a href="/tags/Swift/" title="Swift">Swift<sup>3</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/Precondition/" title="Precondition">Precondition<sup>1</sup></a></li>
+				<li><a href="/tags/Tomcat/" title="Tomcat">Tomcat<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/AnyGenerator/" title="AnyGenerator">AnyGenerator<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Objective-C/" title="Objective-C">Objective-C<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Apache/" title="Apache">Apache<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Mac/" title="Mac">Mac<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Linux/" title="Linux">Linux<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Ubuntu/" title="Ubuntu">Ubuntu<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Assert/" title="Assert">Assert<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/plist/" title="plist">plist<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Password-Window/" title="Password Window">Password Window<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/MailCore2/" title="MailCore2">MailCore2<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Gmail/" title="Gmail">Gmail<sup>1</sup></a></li>
+				<li><a href="/tags/工具/" title="工具">工具<sup>1</sup></a></li>
 			
 		
 			
@@ -284,15 +244,15 @@
 			
 		
 			
-				<li><a href="/tags/In-App-Purchase/" title="In-App Purchase">In-App Purchase<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/动态下载字体/" title="动态下载字体">动态下载字体<sup>1</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/mailx/" title="mailx">mailx<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Apache/" title="Apache">Apache<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/ubuntu/" title="ubuntu">ubuntu<sup>1</sup></a></li>
 			
 		
 		</ul>
@@ -356,7 +316,7 @@
 		
 
 		<p class="copyright">
-		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2015 
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
 		
 		<a href="/about" target="_blank" title="tiny1024">tiny1024</a>
 		
